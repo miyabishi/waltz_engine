@@ -14,11 +14,12 @@ namespace waltz
             class StretchInformation
             {
             public:
-                StretchInformation();
+                StretchInformation(const waltz::engine::ScoreComponent::NoteLength aNoteLength);
+                StretchInformation(const StretchInformation& aOther);
+                StretchInformation& operator=(const StretchInformation& aOther);
+
             private:
                 waltz::engine::ScoreComponent::NoteLength mNoteLength_;
-
-
             };
 
         } // namespace SondPlayer
