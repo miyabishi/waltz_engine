@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>vocal.png</file>
+    </qresource>
+</RCC>

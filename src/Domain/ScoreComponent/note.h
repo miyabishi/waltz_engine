@@ -1,0 +1,45 @@
+#ifndef NOTE_H
+#define NOTE_H
+
+#include "tone.h"
+#include "alias.h"
+#include "notestarttime.h"
+#include "notelength.h"
+
+namespace waltz
+{
+    namespace engine
+    {
+        namespace ScoreComponent
+        {
+
+            class Note
+            {
+            public:
+                Note(const Tone& aTone,
+                     const Alias& aAlias,
+                     const NoteStartTime& aNoteStartTime,
+                     const NoteLength& aNoteLength);
+                Note(const Note& aOther);
+                Note& operator=(const Note& aOther);
+                ~Note();
+
+            public:
+                Alias* alias() const;
+                NoteLength noteLength() const;
+                NoteStartTime noteStartTime() const;
+                MilliSeconds endTime() const;
+                void moveToTop();
+
+            private:
+                Tone          mTone_;
+                Alias&        mAlias_;
+                NoteStartTime mNoteStartTime_;
+                NoteLength    mNoteLength_;
+            };
+
+        } // namespace ScoreComponent
+    } // namespace engine
+} // namespace waltz
+
+#endif // NOTE_H
