@@ -216,11 +216,12 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurve& /*aPitchCurve*/)
                                                       &worldParameters);
 
     // pitchshift
+    /* TODO
     for (int index = 0; index < worldParameters.lengthOfF0; ++index)
     {
         worldParameters.f0[index] = worldParameters.f0[index]  * 0.5;
     }
-
+*/
     qDebug() << "f0 length array(actual):" << worldParameters.lengthOfF0;
     int lengthOfOutput = static_cast<int>((worldParameters.lengthOfF0 - 1) *
       worldParameters.framePeriod / 1000.0 * samplingFrequency) + 1;
