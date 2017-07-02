@@ -56,13 +56,11 @@ void Vocal::loadVoiceLibrary(const QString &aPath)
 
 void Vocal::singSingleNote(const Note& aNote)
 {
-    qDebug() << Q_FUNC_INFO;
-
     if (! mVocalAgent_.isLibraryLoaded())
     {
         return;
     }
-
+    /* TODO
     Note temporaryNote = aNote;
     temporaryNote.moveToTop();
     Notes notes;
@@ -71,6 +69,7 @@ void Vocal::singSingleNote(const Note& aNote)
     SoundData soundData = phrase.toSoundData();
 
     mPlayer_.start(soundData);
+    */
 }
 
 waltz::agent::WaltzVocalAgent* Vocal::vocalAgent()
