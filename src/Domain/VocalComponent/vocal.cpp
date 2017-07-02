@@ -47,6 +47,8 @@ void Vocal::loadVoiceLibrary(const QString &aPath)
                           QString::fromStdString(mVocalAgent_.characterImageFilePath())));
     parameters.append(Parameter("Description",
                           QString::fromStdString(mVocalAgent_.characterDescription())));
+    parameters.append(Parameter("LibraryName",
+                                QString::fromStdString(mVocalAgent_.libraryName())));
     CommunicationServer::getInstance().sendMessage(
                 Message(COMMAND_ID_UPDATE_LIBRARY_INFORMATION,
                         parameters));
