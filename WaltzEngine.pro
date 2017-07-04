@@ -70,7 +70,8 @@ SOURCES += main.cpp \
     world/synthesisrealtime.cpp \
     src/Settings/enginesettings.cpp \
     src/Domain/SoundPlayer/stretchinformation.cpp \
-    src/Domain/SoundPlayer/fixedrange.cpp
+    src/Domain/SoundPlayer/fixedrange.cpp \
+    src/Domain/Commands/playscorecommand.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -122,7 +123,8 @@ HEADERS  += \
     world/synthesisrealtime.h \
     src/Settings/enginesettings.h \
     src/Domain/SoundPlayer/stretchinformation.h \
-    src/Domain/SoundPlayer/fixedrange.h
+    src/Domain/SoundPlayer/fixedrange.h \
+    src/Domain/Commands/playscorecommand.h
 
 RESOURCES += \
     resource/waltzengine.qrc
