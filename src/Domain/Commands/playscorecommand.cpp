@@ -1,3 +1,4 @@
+#include <QDebug>
 #include "playscorecommand.h"
 
 using namespace waltz::engine::Commands;
@@ -15,4 +16,6 @@ PlayScoreCommand::PlayScoreCommand()
 
 void PlayScoreCommand::exec(const Parameters &aParameters)
 {
+    qDebug() << "play score!";
+    qDebug() << aParameters.toJsonArray();
 }

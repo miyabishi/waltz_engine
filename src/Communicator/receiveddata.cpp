@@ -58,7 +58,7 @@ void ReceivedData::parseReceivedData(const QByteArray &aReceivedData)
     QJsonObject jsonObject(jsonDocument.object());
 
     mCommandId_ = CommandId(jsonObject.value(COMMAND_ID_KEY).toString());
-    mParameters_ = Parameters(parseParameters(jsonObject.value(PARAMETERS_KEY).toArray()));
+    mParameters_ = Parameters(jsonObject.value(PARAMETERS_KEY).toArray());
 }
 
 void ReceivedData::executeCommand()
@@ -72,14 +72,3 @@ void ReceivedData::executeCommand()
 }
 
 
-Parameters ReceivedData::parseParameters(const QJsonArray& aParameterArray) const
-{
-    Parameters parameters;
-    foreach(const QJsonValue& value, aParameterArray)
-    {
-        QJsonObject object = value.toObject();
-        parameters.append(Parameter(object.take(PARAMETER_KEY_NAME).toString(),
-                                    object.take(PARAMETER_KEY_VALUE)));
-    }
-    return parameters;
-}

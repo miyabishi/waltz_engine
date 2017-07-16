@@ -23,7 +23,6 @@ namespace waltz
 
             private:
                 void parseReceivedData(const QByteArray& aReceivedData);
-                waltz::common::Commands::Parameters parseParameters(const QJsonArray& aParameterArray) const;
 
             private:
                 waltz::common::Commands::CommandId  mCommandId_;

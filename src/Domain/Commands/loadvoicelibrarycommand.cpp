@@ -19,5 +19,5 @@ LoadVoiceLibraryCommand::LoadVoiceLibraryCommand()
 
 void LoadVoiceLibraryCommand::exec(const Parameters& aParameters)
 {
-    Vocal::getInstance().loadVoiceLibrary(aParameters.find("FilePath").toString());
+    Vocal::getInstance().loadVoiceLibrary(aParameters.find("FilePath").value().toString());
 }
