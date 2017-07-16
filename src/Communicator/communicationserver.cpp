@@ -6,6 +6,7 @@
 #include "receiveddata.h"
 
 using namespace waltz::engine::Communicator;
+using namespace waltz::common::Communicator;
 using namespace waltz::engine::Notifier;
 
 

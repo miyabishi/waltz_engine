@@ -1,6 +1,7 @@
 #include "playscorecommand.h"
 
 using namespace waltz::engine::Commands;
+using namespace waltz::common::Commands;
 
 namespace
 {

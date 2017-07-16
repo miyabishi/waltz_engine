@@ -6,3 +6,4 @@ IT NOT WORK YET.")
 This project using the following libraries.
 - Qt (https://www.qt.io/)
 - WORLD (https://github.com/mmorise/World)
+- waltz_common_library(https://github.com/miyabishi/waltz_common_library)

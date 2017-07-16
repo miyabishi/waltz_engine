@@ -1,11 +1,13 @@
 #include <QDebug>
+#include <waltz_common/commandid.h>
+#include <waltz_common/parameters.h>
+
 #include "src/Domain/VocalComponent/vocal.h"
 #include "src/Domain/ScoreComponent/note.h"
 #include "playnotecommand.h"
-#include "commandid.h"
-#include "parameters.h"
 
 using namespace waltz::engine::Commands;
+using namespace waltz::common::Commands;
 using namespace waltz::engine::VocalComponent;
 using namespace waltz::engine::ScoreComponent;
 

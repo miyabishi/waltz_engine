@@ -26,16 +26,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp \
     src/Dialog/InformationDialog/informationdialog.cpp \
     src/Domain/Commands/commandfactory.cpp \
-    src/Domain/Commands/command.cpp \
-    src/Domain/Commands/parameters.cpp \
-    src/Domain/Commands/parameter.cpp \
-    src/Domain/Commands/commandid.cpp \
     src/Domain/Commands/loadvoicelibrarycommand.cpp \
     src/Domain/VocalComponent/vocal.cpp \
     src/Notifier/tasktraynotifier.cpp \
     src/Communicator/communicationserver.cpp \
     src/Communicator/receiveddata.cpp \
-    src/Communicator/message.cpp \
     src/Domain/Commands/playnotecommand.cpp \
     src/Domain/ScoreComponent/note.cpp \
     src/Domain/ScoreComponent/tone.cpp \
@@ -77,16 +72,11 @@ SOURCES += main.cpp \
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
     src/Domain/Commands/commandfactory.h \
-    src/Domain/Commands/command.h \
-    src/Domain/Commands/parameters.h \
-    src/Domain/Commands/parameter.h \
-    src/Domain/Commands/commandid.h \
     src/Domain/Commands/loadvoicelibrarycommand.h \
     src/Domain/VocalComponent/vocal.h \
     src/Notifier/tasktraynotifier.h \
     src/Communicator/communicationserver.h \
     src/Communicator/receiveddata.h \
-    src/Communicator/message.h \
     src/Domain/Commands/playnotecommand.h \
     src/Domain/ScoreComponent/note.h \
     src/Domain/ScoreComponent/tone.h \
@@ -140,3 +130,10 @@ else:unix: LIBS += -L$$PWD/../WaltzVocalAgent/ -lWaltzVocalAgent
 
 INCLUDEPATH += $$PWD/../WaltzVocalAgent/include
 DEPENDPATH += $$PWD/../WaltzVocalAgent/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../WaltzCommonLibrary/release/ -lWaltzCommonLibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../WaltzCommonLibrary/debug/ -lWaltzCommonLibrary
+else:unix: LIBS += -L$$PWD/../WaltzCommonLibrary/ -lWaltzCommonLibrary
+
+INCLUDEPATH += $$PWD/../WaltzCommonLibrary/include
+DEPENDPATH += $$PWD/../WaltzCommonLibrary/include

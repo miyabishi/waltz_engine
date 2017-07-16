@@ -2,15 +2,17 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <waltz_common/command.h>
+#include <waltz_common/parameters.h>
+#include <waltz_common/parameter.h>
+
 #include "receiveddata.h"
 #include "src/Notifier/tasktraynotifier.h"
-#include "src/Domain/Commands/command.h"
 #include "src/Domain/Commands/commandfactory.h"
-#include "src/Domain/Commands/parameters.h"
-#include "src/Domain/Commands/parameter.h"
 
 using namespace waltz::engine::Communicator;
 using namespace waltz::engine::Commands;
+using namespace waltz::common::Commands;
 using namespace waltz::engine::Notifier;
 
 namespace
@@ -77,7 +79,7 @@ Parameters ReceivedData::parseParameters(const QJsonArray& aParameterArray) cons
     {
         QJsonObject object = value.toObject();
         parameters.append(Parameter(object.take(PARAMETER_KEY_NAME).toString(),
-                                    object.take(PARAMETER_KEY_VALUE).toVariant()));
+                                    object.take(PARAMETER_KEY_VALUE)));
     }
     return parameters;
 }

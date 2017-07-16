@@ -1,7 +1,8 @@
 #ifndef LOADVOICELIBRARYCOMMAND_H
 #define LOADVOICELIBRARYCOMMAND_H
 
-#include "command.h"
+#include <waltz_common/command.h>
+#include <waltz_common/parameters.h>
 
 namespace waltz
 {
@@ -9,12 +10,14 @@ namespace waltz
     {
         namespace Commands
         {
-            class LoadVoiceLibraryCommand : public Command
+            class LoadVoiceLibraryCommand
+                    : public waltz::common::Commands::Command
             {
             public:
                 LoadVoiceLibraryCommand();
             public:
-                void exec(const Parameters &aParameters);
+                void exec(
+                   const waltz::common::Commands::Parameters& aParameters);
             };
         } // namespace Commands
     } // namespace engine

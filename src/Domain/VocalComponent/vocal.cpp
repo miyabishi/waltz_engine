@@ -1,11 +1,11 @@
 #include <QDataStream>
 #include <QDebug>
+#include <waltz_common/parameters.h>
+#include <waltz_common/parameter.h>
+#include <waltz_common/message.h>
 
 #include "src/Domain/ScoreComponent/note.h"
 #include "src/Communicator/communicationserver.h"
-#include "src/Communicator/message.h"
-#include "src/Domain/Commands/parameters.h"
-#include "src/Domain/Commands/parameter.h"
 #include "src/Domain/SoundPlayer/player.h"
 
 #include "src/Domain/ScoreComponent/phrase.h"
@@ -15,9 +15,10 @@
 
 #include "vocal.h"
 
+using namespace waltz::common::Commands;
+using namespace waltz::common::Communicator;
 using namespace waltz::agent;
 using namespace waltz::engine::VocalComponent;
-using namespace waltz::engine::Commands;
 using namespace waltz::engine::Communicator;
 using namespace waltz::engine::ScoreComponent;
 using namespace waltz::engine::SoundPlayer;

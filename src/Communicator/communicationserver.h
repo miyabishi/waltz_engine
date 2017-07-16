@@ -5,7 +5,7 @@
 #include <QList>
 #include <QString>
 #include <QByteArray>
-#include "message.h"
+#include <waltz_common/message.h>
 
 class QWebSocketServer;
 class QWebSocket;
@@ -23,7 +23,8 @@ namespace waltz
                 static CommunicationServer& getInstance();
 
             public:
-                void sendMessage(const Message& aMessage);
+                void sendMessage(
+                        const waltz::common::Communicator::Message& aMessage);
 
             signals:
                 void closed();

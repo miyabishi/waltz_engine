@@ -3,6 +3,7 @@
 #include "src/Domain/VocalComponent/vocal.h"
 
 using namespace waltz::engine::Commands;
+using namespace waltz::common::Commands;
 using namespace waltz::engine::VocalComponent;
 
 namespace

@@ -4,6 +4,8 @@
 #include "playscorecommand.h"
 
 using namespace waltz::engine::Commands;
+using namespace waltz::common::Commands;
+
 
 CommandPointer CommandFactory::createCommand(const CommandId& aCommandId)
 {
