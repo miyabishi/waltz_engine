@@ -1,5 +1,8 @@
 #include <QDebug>
+#include <QJsonObject>
+#include <waltz_common/parameterslist.h>
 #include "playscorecommand.h"
+#include "src/Domain/ScoreComponent/score.h"
 
 using namespace waltz::engine::Commands;
 using namespace waltz::common::Commands;
@@ -16,6 +19,8 @@ PlayScoreCommand::PlayScoreCommand()
 
 void PlayScoreCommand::exec(const Parameters &aParameters)
 {
-    qDebug() << "play score!";
-    qDebug() << aParameters.toJsonArray();
+    ParametersList noteList(aParameters.find("NoteList").value().toArray());
+    qDebug() << noteList.toJsonArray();
+    //    waltz::engine::ScoreComponent::Score score;
+
 }

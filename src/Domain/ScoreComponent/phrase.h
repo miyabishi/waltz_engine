@@ -5,6 +5,7 @@
 #include <QVector>
 #include <vector>
 #include <QByteArray>
+#include <QSharedPointer>
 #include "notes.h"
 #include "phraselength.h"
 #include "phrasestarttime.h"
@@ -34,8 +35,8 @@ namespace waltz
 
             private:
                 Notes           mNotes_;
-
             };
+            typedef QSharedPointer<Phrase> PhrasePointer;
         } // namespace ScoreComponent
     } // namespace engine
 } // namespace waltz

@@ -19,12 +19,12 @@ namespace waltz
                 Phrases();
                 Phrases(const Phrases& aOther);
                 Phrases& operator=(const Phrases& aOther);
-                void apend(const Phrase& aPhrase);
+                void apend(const PhrasePointer& aPhrase);
             public:
                 waltz::engine::SoundPlayer::SoundData toSoundData() const;
                 MilliSeconds length() const;
             private:
-                QList<Phrase> mPhrases_;
+                QList<PhrasePointer> mPhrases_;
             };
         } // namespace ScoreComponent
     } // namespace engine

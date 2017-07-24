@@ -19,7 +19,6 @@ namespace
     const QString PARAMETER_NAME_TONE_ALIAS("Alias");
     const QString PARAMETER_NAME_TONE_NOTE_START_TIME("NoteStartTime");
     const QString PARAMETER_NAME_TONE_NOTE_LENGTH("NoteLength");
-
 }
 
 PlayNoteCommand::PlayNoteCommand()
@@ -29,12 +28,6 @@ PlayNoteCommand::PlayNoteCommand()
 
 void PlayNoteCommand::exec(const Parameters& aParameters)
 {
-    Note note(Tone((ToneValue)aParameters.find(PARAMETER_NAME_TONE_VALUE).value().toInt(),
-                   aParameters.find(PARAMETER_NAME_TONE_OCTAVE).value().toInt()),
-              Alias(aParameters.find(PARAMETER_NAME_TONE_ALIAS).value().toString()),
-              NoteStartTime(
-                  MilliSeconds(aParameters.find(PARAMETER_NAME_TONE_NOTE_START_TIME).value().toDouble())),
-              NoteLength(
-                  MilliSeconds(aParameters.find(PARAMETER_NAME_TONE_NOTE_LENGTH).value().toDouble())));
+    Note note(aParameters);
     Vocal::getInstance().singSingleNote(note);
 }

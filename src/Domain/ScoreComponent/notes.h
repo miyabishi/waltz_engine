@@ -22,7 +22,7 @@ namespace waltz
                 Notes& operator=(const Notes& aOther);
 
             public:
-                void append(const Note& aNote);
+                void append(const NotePointer& aNote);
                 QVector<waltz::agent::IAlias*> aliases() const;
                 MilliSeconds startTime() const;
                 MilliSeconds endTime() const;
@@ -30,7 +30,7 @@ namespace waltz
                 PitchCurvePointer getPitchCurve() const;
 
             private:
-                QList<Note> mNotes_;
+                QList<NotePointer> mNotes_;
             };
 
         } // namespace ScoreComponent

@@ -1,6 +1,8 @@
 #ifndef NOTE_H
 #define NOTE_H
 
+#include <QSharedPointer>
+#include <waltz_common/parameters.h>
 #include "tone.h"
 #include "alias.h"
 #include "notestarttime.h"
@@ -16,6 +18,7 @@ namespace waltz
             class Note
             {
             public:
+                Note(const waltz::common::Commands::Parameters& aParameters);
                 Note(const Tone& aTone,
                      const Alias& aAlias,
                      const NoteStartTime& aNoteStartTime,
@@ -37,6 +40,7 @@ namespace waltz
                 NoteStartTime mNoteStartTime_;
                 NoteLength    mNoteLength_;
             };
+            typedef QSharedPointer<Note> NotePointer;
 
         } // namespace ScoreComponent
     } // namespace engine

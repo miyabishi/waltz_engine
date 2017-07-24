@@ -20,7 +20,7 @@ Phrases& Phrases::operator=(const Phrases& aOther)
     return (*this);
 }
 
-void Phrases::apend(const Phrase &aPhrase)
+void Phrases::apend(const PhrasePointer &aPhrase)
 {
     mPhrases_.append(aPhrase);
 }
@@ -31,8 +31,8 @@ SoundData Phrases::toSoundData() const
     SoundData soundData;
     for(int index = 0; index < mPhrases_.length(); ++index)
     {
-        soundData.appendData(mPhrases_.at(index).toSoundData(),
-                             mPhrases_.at(index).phraseStartTime().toMilliSeconds());
+        soundData.appendData(mPhrases_.at(index)->toSoundData(),
+                             mPhrases_.at(index)->phraseStartTime().toMilliSeconds());
     }
     return soundData;
 }
@@ -43,5 +43,5 @@ MilliSeconds Phrases::length() const
     {
         return MilliSeconds();
     }
-    return mPhrases_.last().endTime();
+    return mPhrases_.last()->endTime();
 }

@@ -19,7 +19,7 @@ Notes& Notes::operator=(const Notes& aOther)
     return (*this);
 }
 
-void Notes::append(const Note& aNote)
+void Notes::append(const NotePointer& aNote)
 {
     mNotes_.append(aNote);
 }
@@ -27,9 +27,9 @@ void Notes::append(const Note& aNote)
 QVector<waltz::agent::IAlias*> Notes::aliases() const
 {
     QVector<waltz::agent::IAlias*> aliasesVector;
-    foreach(const Note& note, mNotes_)
+    foreach(const NotePointer& note, mNotes_)
     {
-        aliasesVector.append((waltz::agent::IAlias*)note.alias());
+        aliasesVector.append((waltz::agent::IAlias*)note->alias());
     }
     return aliasesVector;
 }
@@ -40,7 +40,7 @@ MilliSeconds Notes::startTime() const
     {
         return MilliSeconds();
     }
-    return mNotes_.at(0).noteStartTime().toMilliSeconds();
+    return mNotes_.at(0)->noteStartTime().toMilliSeconds();
 }
 
 MilliSeconds Notes::endTime() const
@@ -49,7 +49,7 @@ MilliSeconds Notes::endTime() const
     {
         return MilliSeconds();
     }
-    return mNotes_.last().endTime();
+    return mNotes_.last()->endTime();
 }
 
 MilliSeconds Notes::length() const
@@ -59,7 +59,5 @@ MilliSeconds Notes::length() const
 
 PitchCurvePointer Notes::getPitchCurve() const
 {
-    qDebug() << Q_FUNC_INFO;
-    qDebug() << "f0 array length (expect):" << length().toF0ArrayLength();
     return PitchCurvePointer(new PitchCurve());
 }
