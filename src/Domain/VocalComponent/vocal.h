@@ -12,6 +12,7 @@ namespace waltz
         namespace ScoreComponent
         {
             class Note;
+            class Score;
         }
         namespace VocalComponent
         {
@@ -22,6 +23,7 @@ namespace waltz
                 void loadVoiceLibrary(const QString& aPath);
                 void singSingleNote(
                         const waltz::engine::ScoreComponent::Note& aNote);
+                void sing(const waltz::engine::ScoreComponent::Score& aScore);
                 waltz::agent::WaltzVocalAgent* vocalAgent();
 
             private:

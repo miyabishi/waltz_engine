@@ -27,7 +27,6 @@ void Phrases::apend(const PhrasePointer &aPhrase)
 
 SoundData Phrases::toSoundData() const
 {
-
     SoundData soundData;
     for(int index = 0; index < mPhrases_.length(); ++index)
     {

@@ -14,11 +14,6 @@ using namespace waltz::engine::ScoreComponent;
 namespace
 {
     const CommandId COMMAND_ID_PLAY_NOTE ("PlayNote");
-    const QString PARAMETER_NAME_TONE_VALUE("ToneValue");
-    const QString PARAMETER_NAME_TONE_OCTAVE("Octave");
-    const QString PARAMETER_NAME_TONE_ALIAS("Alias");
-    const QString PARAMETER_NAME_TONE_NOTE_START_TIME("NoteStartTime");
-    const QString PARAMETER_NAME_TONE_NOTE_LENGTH("NoteLength");
 }
 
 PlayNoteCommand::PlayNoteCommand()
@@ -26,8 +21,10 @@ PlayNoteCommand::PlayNoteCommand()
 {
 }
 
-void PlayNoteCommand::exec(const Parameters& aParameters)
+void PlayNoteCommand::exec(const Parameters& /*aParameters*/)
 {
+    /*
     Note note(aParameters);
     Vocal::getInstance().singSingleNote(note);
+    */
 }

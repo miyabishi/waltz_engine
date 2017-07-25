@@ -61,16 +61,23 @@ void Vocal::singSingleNote(const Note& aNote)
     {
         return;
     }
-    /* TODO
-    Note temporaryNote = aNote;
-    temporaryNote.moveToTop();
+    NotePointer temporaryNote(new Note(aNote));
+    temporaryNote->moveToTop();
     Notes notes;
     notes.append(temporaryNote);
     Phrase phrase(notes);
     SoundData soundData = phrase.toSoundData();
 
     mPlayer_.start(soundData);
-    */
+}
+
+void Vocal::sing(const Score &aScore)
+{
+    if(! mVocalAgent_.isLibraryLoaded())
+    {
+        return;
+    }
+    mPlayer_.start(aScore.toSoundData());
 }
 
 waltz::agent::WaltzVocalAgent* Vocal::vocalAgent()

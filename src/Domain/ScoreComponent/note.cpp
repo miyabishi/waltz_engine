@@ -15,8 +15,8 @@ Note::Note(const waltz::common::Commands::Parameters& aParameters)
     : mTone_((ToneValue)aParameters.find(PARAMETER_NAME_TONE_VALUE).value().toInt(),
                aParameters.find(PARAMETER_NAME_TONE_OCTAVE).value().toInt())
     , mAlias_(* (new Alias(aParameters.find(PARAMETER_NAME_ALIAS).value().toString())))
-    , mNoteStartTime_(MilliSeconds(aParameters.find(PARAMETER_NAME_NOTE_START_TIME).value().toDouble()))
-    , mNoteLength_(MilliSeconds(aParameters.find(PARAMETER_NAME_NOTE_LENGTH).value().toDouble()))
+    , mNoteStartTime_(MilliSeconds(aParameters.find(PARAMETER_NAME_NOTE_START_TIME).value().toDouble()*1000.0))
+    , mNoteLength_(MilliSeconds(aParameters.find(PARAMETER_NAME_NOTE_LENGTH).value().toDouble()*1000.0))
 {
 }
 

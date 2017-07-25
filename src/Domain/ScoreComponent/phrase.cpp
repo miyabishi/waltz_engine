@@ -39,7 +39,6 @@ std::vector<waltz::agent::IAlias*> Phrase::aliases() const
 
 SoundData Phrase::toSoundData() const
 {
-    qDebug() << Q_FUNC_INFO;
     WaltzVocalAgent* agent = Vocal::getInstance().vocalAgent();
     if (agent == 0)
     {
@@ -47,8 +46,6 @@ SoundData Phrase::toSoundData() const
     }
 
     FragmentList fragmentList = agent->phraseToFragmentList(this);
-
-    // todo
     FragmentData firstData = fragmentList.at(0).at(0);
     SampleSize sampleSize = SampleSize(firstData.sampleSize());
     SampleRate sampleRate = SampleRate(firstData.sampleRate());
@@ -58,7 +55,6 @@ SoundData Phrase::toSoundData() const
                         SoundDataInformation(sampleSize, sampleRate));
 
     // 伸縮
-
     // 結合
     /*
     for(int index = 1; index < fragmentList.length(); ++index)
@@ -76,6 +72,7 @@ SoundData Phrase::toSoundData() const
     // todo: ピッチ変換
     soundData.pitchShift(PitchCurve());
 
+    qDebug() << Q_FUNC_INFO << "to sound data";
     return soundData;
 }
 

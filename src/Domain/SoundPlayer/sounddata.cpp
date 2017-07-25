@@ -133,10 +133,11 @@ QVector<double> SoundData::toVector() const
 
 void SoundData::appendData(const SoundData &aSoundData, const MilliSeconds &aStartTime)
 {
-    qDebug() << Q_FUNC_INFO;
     updateInformationIfNotInitialized(aSoundData.soundDataInformation());
     int startTimeIndex = mSoundDataInformation_.calculateIndex(aStartTime);
-
+    qDebug() << Q_FUNC_INFO
+             << "starttime index" << startTimeIndex
+             << "milli seconds value" << aStartTime.value();
     if (mSoundVector_.length() > startTimeIndex)
     {
         mSoundVector_ = mSoundVector_.mid(0, startTimeIndex);
@@ -148,7 +149,6 @@ void SoundData::appendData(const SoundData &aSoundData, const MilliSeconds &aSta
     }
 
     QVector<double> appendDataVector(aSoundData.toVector());
-
     for(int index = 0; index < appendDataVector.length(); ++index)
     {
         mSoundVector_.append(appendDataVector.at(index));

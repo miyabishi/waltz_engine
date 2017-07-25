@@ -3,9 +3,11 @@
 #include <waltz_common/parameterslist.h>
 #include "playscorecommand.h"
 #include "src/Domain/ScoreComponent/score.h"
+#include "src/Domain/VocalComponent/vocal.h"
 
-using namespace waltz::engine::Commands;
 using namespace waltz::common::Commands;
+using namespace waltz::engine::Commands;
+using namespace waltz::engine::VocalComponent;
 
 namespace
 {
@@ -19,8 +21,7 @@ PlayScoreCommand::PlayScoreCommand()
 
 void PlayScoreCommand::exec(const Parameters &aParameters)
 {
-    ParametersList noteList(aParameters.find("NoteList").value().toArray());
-    qDebug() << noteList.toJsonArray();
-    //    waltz::engine::ScoreComponent::Score score;
-
+    qDebug() << Q_FUNC_INFO << "play score!";
+    waltz::engine::ScoreComponent::Score score(aParameters);
+    Vocal::getInstance().sing(score);
 }
