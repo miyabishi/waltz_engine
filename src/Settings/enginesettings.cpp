@@ -6,7 +6,8 @@ EngineSettings* EngineSettings::mInstance_ = 0;
 
 namespace
 {
-    const double FRAME_PERIOD = 0.2; // ms
+    const double FRAME_PERIOD = 0.5; // ms
+    const double PARAMETER_RESOLUTION = 1.0; // ms
 }
 
 EngineSettings& EngineSettings::getInstance()
@@ -22,6 +23,11 @@ EngineSettings& EngineSettings::getInstance()
 double EngineSettings::framePeriod() const
 {
     return FRAME_PERIOD;
+}
+
+double EngineSettings::parameterResolution() const
+{
+    return PARAMETER_RESOLUTION;
 }
 
 EngineSettings::EngineSettings()

@@ -189,12 +189,10 @@ SoundDataInformation SoundData::soundDataInformation() const
     return mSoundDataInformation_;
 }
 
-void SoundData::pitchShift(const ScoreComponent::PitchCurve& /*aPitchCurve*/)
+void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer /*aPitchCurve*/)
 {
     WorldParameters worldParameters = {0};
     mSoundDataInformation_.setWorldParametersToValues(&worldParameters);
-
-    worldParameters.framePeriod = 0.5;
 
     int samplingFrequency = worldParameters.samplingFrequency;
     int inputLengh = mSoundVector_.size();
@@ -214,10 +212,10 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurve& /*aPitchCurve*/)
     Synthesizer::getInstance().AperiodicityEstimation(input,
                                                       inputLengh,
                                                       &worldParameters);
-    // pitchshift
 
-    int lengthOfOutput = static_cast<int>((worldParameters.lengthOfF0 - 1) *
-      worldParameters.framePeriod / 1000.0 * samplingFrequency) + 1;
+    int lengthOfOutput =
+            static_cast<int>((worldParameters.lengthOfF0 - 1) *
+                              worldParameters.framePeriod / 1000.0 * samplingFrequency) + 1;
     double* output = new double[lengthOfOutput];
 
     Synthesizer::getInstance().WaveformSynthesis(&worldParameters,
@@ -229,6 +227,7 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurve& /*aPitchCurve*/)
     {
         mSoundVector_.append(output[index]);
     }
+    qDebug() << "length of output:" << lengthOfOutput;
     delete output;
     delete input;
 }

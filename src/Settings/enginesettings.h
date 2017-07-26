@@ -14,6 +14,7 @@ namespace waltz
             public:
                 static EngineSettings& getInstance();
                 double framePeriod() const;
+                double parameterResolution() const;
             private:
                 static EngineSettings* mInstance_;
                 EngineSettings();

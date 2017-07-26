@@ -29,7 +29,7 @@ namespace waltz
                 void appendDataWithCrossfade(const SoundData& aSoundData,
                                              const waltz::engine::ScoreComponent::MilliSeconds& aOverlapTime);
                 void stretch(const waltz::engine::ScoreComponent::MilliSeconds& aStartTime);
-                void pitchShift(const ScoreComponent::PitchCurve &aPitchCurve);
+                void pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve);
 
                 QVector<double> toVector() const;
                 QByteArray toByteArray() const;

@@ -24,24 +24,6 @@ void Synthesizer::estimateF0(double *aInput,
                 int aLengthOfInput,
                 WorldParameters *aWorldParameters)
 {
-        /*
-      HarvestOption option = { 0 };
-      InitializeHarvestOption(&option);
-      option.frame_period = aWorldParameters->framePeriod;
-
-      // You can set the f0_floor below world::kFloorF0.
-      option.f0_floor = 40.0;
-
-      // Parameters setting and memory allocation.
-      aWorldParameters->lengthOfF0 = GetSamplesForHarvest(aWorldParameters->samplingFrequency,
-        aLengthOfInput, aWorldParameters->framePeriod);
-      aWorldParameters->f0 = new double[aWorldParameters->lengthOfF0];
-      aWorldParameters->timeAxis = new double[aWorldParameters->lengthOfF0];
-
-      Harvest(aInput, aLengthOfInput, aWorldParameters->samplingFrequency, &option,
-              aWorldParameters->timeAxis, aWorldParameters->f0);
-    */
-
     DioOption option;
     InitializeDioOption(&option);
 

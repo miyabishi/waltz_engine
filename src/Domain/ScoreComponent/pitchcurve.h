@@ -3,6 +3,9 @@
 
 #include <memory>
 #include <QSharedPointer>
+#include <QList>
+#include "pitchchangingpoint.h"
+#include "milliseconds.h"
 
 namespace waltz
 {
@@ -15,6 +18,13 @@ namespace waltz
             {
             public:
                 PitchCurve();
+                void append(const PitchChangingPointPointer& aPitchChangingPoint);
+                int length() const;
+                double calculateValue(int aIndex, int aLength);
+
+            private:
+                QList<PitchChangingPointPointer> mPitchCurve_;
+
             private:
                 PitchCurve& operator =(const PitchCurve& aOther);
                 PitchCurve(const PitchCurve& aOther);

@@ -67,7 +67,8 @@ SOURCES += main.cpp \
     src/Domain/SoundPlayer/stretchinformation.cpp \
     src/Domain/SoundPlayer/fixedrange.cpp \
     src/Domain/Commands/playscorecommand.cpp \
-    src/Domain/SoundPlayer/worldparametersrepository.cpp
+    src/Domain/SoundPlayer/worldparametersrepository.cpp \
+    src/Domain/ScoreComponent/pitchchangingpoint.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -116,7 +117,8 @@ HEADERS  += \
     src/Domain/SoundPlayer/stretchinformation.h \
     src/Domain/SoundPlayer/fixedrange.h \
     src/Domain/Commands/playscorecommand.h \
-    src/Domain/SoundPlayer/worldparametersrepository.h
+    src/Domain/SoundPlayer/worldparametersrepository.h \
+    src/Domain/ScoreComponent/pitchchangingpoint.h
 
 RESOURCES += \
     resource/waltzengine.qrc
