@@ -135,9 +135,7 @@ void SoundData::appendData(const SoundData &aSoundData, const MilliSeconds &aSta
 {
     updateInformationIfNotInitialized(aSoundData.soundDataInformation());
     int startTimeIndex = mSoundDataInformation_.calculateIndex(aStartTime);
-    qDebug() << Q_FUNC_INFO
-             << "starttime index" << startTimeIndex
-             << "milli seconds value" << aStartTime.value();
+
     if (mSoundVector_.length() > startTimeIndex)
     {
         mSoundVector_ = mSoundVector_.mid(0, startTimeIndex);
@@ -189,7 +187,8 @@ SoundDataInformation SoundData::soundDataInformation() const
     return mSoundDataInformation_;
 }
 
-void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer /*aPitchCurve*/)
+void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
+                           const ScoreComponent::TimeRange& aTimeRange)
 {
     WorldParameters worldParameters = {0};
     mSoundDataInformation_.setWorldParametersToValues(&worldParameters);
@@ -213,6 +212,13 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer /*aPitchCurve
                                                       inputLengh,
                                                       &worldParameters);
 
+    // pitch shift
+    for(int index = 0; index < worldParameters.lengthOfF0; ++index)
+    {
+        MilliSeconds pos = MilliSeconds((aTimeRange.length().value() / worldParameters.lengthOfF0)* index);
+        worldParameters.f0[index] = aPitchCurve->calculateValue(pos);
+    }
+
     int lengthOfOutput =
             static_cast<int>((worldParameters.lengthOfF0 - 1) *
                               worldParameters.framePeriod / 1000.0 * samplingFrequency) + 1;
@@ -227,7 +233,6 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer /*aPitchCurve
     {
         mSoundVector_.append(output[index]);
     }
-    qDebug() << "length of output:" << lengthOfOutput;
     delete output;
     delete input;
 }

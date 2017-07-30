@@ -23,3 +23,7 @@ double Octave::multiplyOctave(double aBaseFrequency) const
     return aBaseFrequency * mValue_;
 }
 
+int Octave::value() const
+{
+    return mValue_;
+}

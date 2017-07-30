@@ -18,6 +18,9 @@ namespace waltz
                 MilliSeconds(const MilliSeconds& aOther);
                 MilliSeconds& operator=(const MilliSeconds& aOther);
 
+                MilliSeconds add(const MilliSeconds& aOther) const;
+                MilliSeconds subtract(const MilliSeconds& aOther) const;
+
                 double value() const;
                 double toSeconds() const;
                 int    toArrayLength(const waltz::engine::SoundPlayer::SampleRate& aSampleRate) const;

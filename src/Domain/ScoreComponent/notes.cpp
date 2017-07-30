@@ -1,3 +1,4 @@
+#include "pitchchangingpoint.h"
 #include "alias.h"
 #include "notes.h"
 #include <QDebug>
@@ -59,5 +60,19 @@ MilliSeconds Notes::length() const
 
 PitchCurvePointer Notes::getPitchCurve() const
 {
-    return PitchCurvePointer(new PitchCurve());
+    PitchCurvePointer pitchCurve(new PitchCurve());
+    foreach(const NotePointer& note, mNotes_)
+    {
+        pitchCurve->append(PitchChangingPointPointer(
+                                       new PitchChangingPoint(note->noteStartTime().toMilliSeconds(), note->tone().frequency())));
+        pitchCurve->append(PitchChangingPointPointer(
+                                       new PitchChangingPoint(MilliSeconds(note->endTime().value() - 0.01) ,
+                                                              note->tone().frequency())));
+    }
+    return pitchCurve;
+}
+
+TimeRange Notes::timeRange() const
+{
+    return TimeRange(startTime(),endTime());
 }

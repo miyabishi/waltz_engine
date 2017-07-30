@@ -2,9 +2,16 @@
 
 using namespace waltz::engine::ScoreComponent;
 
-PitchChangingPoint::PitchChangingPoint(const double& aValue)
-    : mValue_(aValue)
+PitchChangingPoint::PitchChangingPoint(const MilliSeconds& aPosition,
+                                       const double& aValue)
+    : mPosition_(aPosition)
+    , mValue_(aValue)
 {
+}
+
+MilliSeconds PitchChangingPoint::position() const
+{
+    return mPosition_;
 }
 
 double PitchChangingPoint::value() const

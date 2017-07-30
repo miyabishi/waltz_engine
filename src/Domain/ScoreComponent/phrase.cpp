@@ -70,7 +70,8 @@ SoundData Phrase::toSoundData() const
     */
 
     // todo: ピッチ変換
-    soundData.pitchShift(mNotes_.getPitchCurve());
+    soundData.pitchShift(mNotes_.getPitchCurve(),
+                         mNotes_.timeRange());
 
     qDebug() << Q_FUNC_INFO << "to sound data";
     return soundData;

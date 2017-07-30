@@ -82,3 +82,8 @@ void Note::moveToTop()
 {
     mNoteStartTime_ = NoteStartTime(MilliSeconds(0.0));
 }
+
+Tone Note::tone() const
+{
+    return mTone_;
+}

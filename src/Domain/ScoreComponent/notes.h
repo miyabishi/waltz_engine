@@ -4,6 +4,7 @@
 #include <QList>
 #include <QVector>
 #include <ialias.h>
+#include "timerange.h"
 #include "pitchcurve.h"
 #include "note.h"
 #include "milliseconds.h"
@@ -27,8 +28,8 @@ namespace waltz
                 MilliSeconds startTime() const;
                 MilliSeconds endTime() const;
                 MilliSeconds length() const;
-                PitchCurvePointer getPitchCurve() const;
-
+                PitchCurvePointer getPitchCurve() const ;
+                TimeRange timeRange() const;
             private:
                 QList<NotePointer> mNotes_;
             };

@@ -33,6 +33,7 @@ namespace waltz
                 NoteStartTime noteStartTime() const;
                 MilliSeconds endTime() const;
                 void moveToTop();
+                Tone tone() const;
 
             private:
                 Tone          mTone_;

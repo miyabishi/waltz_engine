@@ -16,6 +16,7 @@ namespace waltz
                 Octave& operator=(const Octave& aOther);
             public:
                 double multiplyOctave(double aBaseFrequency) const;
+                int value() const;
 
             private:
                 int mValue_;

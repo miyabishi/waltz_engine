@@ -20,7 +20,7 @@ namespace waltz
                 PitchCurve();
                 void append(const PitchChangingPointPointer& aPitchChangingPoint);
                 int length() const;
-                double calculateValue(int aIndex, int aLength);
+                double calculateValue(const MilliSeconds& aPosition);
 
             private:
                 QList<PitchChangingPointPointer> mPitchCurve_;

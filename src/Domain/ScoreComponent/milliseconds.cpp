@@ -49,3 +49,13 @@ int MilliSeconds::toF0ArrayLength() const
 {
     return (int)(mMilliSeconds_ / EngineSettings::getInstance().framePeriod());
 }
+
+MilliSeconds MilliSeconds::add(const MilliSeconds &aOther) const
+{
+    return MilliSeconds(value() + aOther.value());
+}
+
+MilliSeconds MilliSeconds::subtract(const MilliSeconds &aOther) const
+{
+    return MilliSeconds(value() - aOther.value());
+}
