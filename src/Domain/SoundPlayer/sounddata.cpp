@@ -177,12 +177,14 @@ void SoundData::appendDataWithCrossfade(const SoundData &aSoundData,
     {
         if (index < overlapArrayLength - 1)
         {
-            double baseData =
-                    (mSoundVector_.at(mSoundVector_.length() - 1 - index) - mSoundDataInformation_.zeroLine())
-                    * fadeOutFunction(index, overlapArrayLength) + mSoundDataInformation_.zeroLine();
-            double appendData =
-                    (aSoundData.toVector().at(index) - mSoundDataInformation_.zeroLine())
-                    * fadeInFunction(index, overlapArrayLength) + mSoundDataInformation_.zeroLine();
+            double baseData = fadeOutFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
+                                              mSoundDataInformation_.zeroLine(),
+                                              index,
+                                              overlapArrayLength);
+            double appendData = fadeInFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
+                                                mSoundDataInformation_.zeroLine(),
+                                                index,
+                                                overlapArrayLength);
 
             mSoundVector_[mSoundVector_.length() - 1 - index]
                   = baseData + appendData;
@@ -214,7 +216,10 @@ void SoundData::addFadeOut(const ScoreComponent::MilliSeconds& aLength)
 
     for(int index = startIndex; index < mSoundVector_.length(); ++index)
     {
-        mSoundVector_[index] *= fadeOutFunction(index,fadeOutLength);
+        mSoundVector_[index] *= fadeOutFunction(
+                    mSoundVector_.at(index),
+                    mSoundDataInformation_.zeroLine(),
+                    index,fadeOutLength);
     }
 }
 

@@ -33,7 +33,7 @@ void Player::start(const SoundData& aSoundData)
     mAudioOutput_ = new QAudioOutput(format, this);
     QThread::sleep(1);
     mAudioOutput_->setNotifyInterval(50);
-    //    mAudioOutput_->setBufferSize(16 * 1280);
+    //mAudioOutput_->setBufferSize(16 * 1280);
     //mAudioOutput_->setBufferSize(32768);
     mAudioOutput_->setBufferSize(44100);
     connect(mAudioOutput_, SIGNAL(stateChanged(QAudio::State)), this, SLOT(stateChangedHandler(QAudio::State)));
