@@ -7,6 +7,7 @@
 #include "alias.h"
 #include "notestarttime.h"
 #include "notelength.h"
+#include "timerange.h"
 
 namespace waltz
 {
@@ -32,6 +33,8 @@ namespace waltz
                 NoteLength noteLength() const;
                 NoteStartTime noteStartTime() const;
                 MilliSeconds endTime() const;
+                TimeRange noteTimeRange() const;
+
                 void moveToTop();
                 Tone tone() const;
 

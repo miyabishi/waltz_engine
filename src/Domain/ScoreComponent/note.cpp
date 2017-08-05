@@ -87,3 +87,9 @@ Tone Note::tone() const
 {
     return mTone_;
 }
+
+TimeRange Note::noteTimeRange() const
+{
+    return TimeRange(noteStartTime().toMilliSeconds(),
+                     noteStartTime().toMilliSeconds().add(mNoteLength_.toMilliSeconds()));
+}

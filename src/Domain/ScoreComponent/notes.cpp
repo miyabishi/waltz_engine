@@ -53,9 +53,13 @@ MilliSeconds Notes::endTime() const
     return mNotes_.last()->endTime();
 }
 
-MilliSeconds Notes::length() const
+MilliSeconds Notes::timeLength() const
 {
     return MilliSeconds(endTime().value() - startTime().value());
+}
+int Notes::length() const
+{
+    return mNotes_.length();
 }
 
 PitchCurvePointer Notes::getPitchCurve() const
@@ -70,6 +74,10 @@ PitchCurvePointer Notes::getPitchCurve() const
                                                               note->tone().frequency())));
     }
     return pitchCurve;
+}
+NotePointer Notes::at(int index) const
+{
+    return mNotes_.at(index);
 }
 
 TimeRange Notes::timeRange() const

@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 #include <QVector>
+#include "worldparameters.h"
 
 namespace waltz
 {
@@ -10,20 +11,6 @@ namespace waltz
     {
         namespace SoundPlayer
         {
-            typedef struct
-            {
-                double framePeriod;
-                int samplingFrequency;
-
-                double *f0;
-                double *timeAxis;
-                int lengthOfF0;
-
-                double **spectrogram;
-                double **aperiodicity;
-                int sizeOfFFT;
-            } WorldParameters;
-
             class Synthesizer
             {
 

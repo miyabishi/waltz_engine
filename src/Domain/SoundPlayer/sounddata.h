@@ -4,7 +4,7 @@
 #include <QByteArray>
 #include <QVector>
 #include "sounddatainformation.h"
-#include "sounddataid.h"
+#include "worldparameterscacheid.h"
 #include "src/Domain/ScoreComponent/pitchcurve.h"
 #include "src/Domain/ScoreComponent/milliseconds.h"
 #include "src/Domain/ScoreComponent/timerange.h"
@@ -29,10 +29,13 @@ namespace waltz
                 void appendData(const SoundData& aSoundData,
                                 const waltz::engine::ScoreComponent::MilliSeconds& aStartTime);
                 void appendDataWithCrossfade(const SoundData& aSoundData,
+                                             const waltz::engine::ScoreComponent::MilliSeconds& aStartTime,
                                              const waltz::engine::ScoreComponent::MilliSeconds& aOverlapTime);
                 void stretch(const ScoreComponent::MilliSeconds& aStartTime);
+                void addFadeOut(const ScoreComponent::MilliSeconds& aLength);
                 void pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
-                                const ScoreComponent::TimeRange& aTimeRange);
+                                const ScoreComponent::TimeRange& aTimeRange,
+                                const WorldParametersCacheId& aWorldParametersCacheId);
 
                 QVector<double> toVector() const;
                 QByteArray toByteArray() const;
@@ -46,7 +49,6 @@ namespace waltz
             private:
                 QVector<double>      mSoundVector_;
                 SoundDataInformation mSoundDataInformation_;
-                SoundDataId          mSoundDataId_;
             };
 
         } // namespace SoundPlayer

@@ -15,5 +15,31 @@ WorldParametersRepository& WorldParametersRepository::getInstance()
 }
 
 WorldParametersRepository::WorldParametersRepository()
+    : mWorldParametersRepository_()
 {
 }
+
+bool WorldParametersRepository::hasWorldParammeters(const WorldParametersCacheId& aWorldParametersCacheId) const
+{
+    return mWorldParametersRepository_.contains(aWorldParametersCacheId.value());
+}
+
+void WorldParametersRepository::loadWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
+                                                    WorldParameters* aWorldParameters)
+{
+    WorldParametersCachePointer cache = mWorldParametersRepository_[aWorldParametersCacheId.value()];
+    if (cache.isNull())
+    {
+        return;
+    }
+    cache->createWorldParameters(aWorldParameters);
+}
+
+void WorldParametersRepository::registerWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
+                                                        WorldParameters* aWorldParameters)
+{
+    mWorldParametersRepository_[aWorldParametersCacheId.value()] =
+            WorldParametersCachePointer(
+                new WorldParametersCache(aWorldParameters));
+}
+

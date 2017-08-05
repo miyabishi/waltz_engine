@@ -1,6 +1,10 @@
 #ifndef WORLDPARAMETERSREPOSITORY_H
 #define WORLDPARAMETERSREPOSITORY_H
 
+#include <QMap>
+#include "worldparameters.h"
+#include "worldparameterscacheid.h"
+#include "worldparameterscache.h"
 
 namespace waltz
 {
@@ -13,9 +17,17 @@ namespace waltz
             {
             public:
                 static WorldParametersRepository& getInstance();
+                bool hasWorldParammeters(const WorldParametersCacheId& aWorldParametersCacheId) const;
+
+                void loadWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
+                                         WorldParameters* aWorldParameters);
+                void registerWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
+                                             WorldParameters* aWorldParameters);
 
             private:
                 static WorldParametersRepository* mInstance_;
+
+                QMap<QString, WorldParametersCachePointer> mWorldParametersRepository_;
 
             private:
                 WorldParametersRepository();

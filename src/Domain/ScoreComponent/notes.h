@@ -27,7 +27,9 @@ namespace waltz
                 QVector<waltz::agent::IAlias*> aliases() const;
                 MilliSeconds startTime() const;
                 MilliSeconds endTime() const;
-                MilliSeconds length() const;
+                MilliSeconds timeLength() const;
+                int length() const;
+                NotePointer at(int index) const;
                 PitchCurvePointer getPitchCurve() const ;
                 TimeRange timeRange() const;
             private:

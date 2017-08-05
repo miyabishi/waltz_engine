@@ -29,6 +29,7 @@ Score::Score(const Parameters& aParameters)
         NotePointer note(new Note(noteList.at(index)));
         if(notes.endTime().value() != note->noteStartTime().toMilliSeconds().value())
         {
+            qDebug() << Q_FUNC_INFO << "create new Phrase";
             mPhrases_.apend(PhrasePointer(new Phrase(notes)));
             notes = Notes();
         }

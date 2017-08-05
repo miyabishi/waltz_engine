@@ -2,11 +2,12 @@
 #include <memory>
 #include <QDataStream>
 #include <QBuffer>
+#include "worldparametersrepository.h"
 #include "sounddata.h"
+
 
 using namespace waltz::engine::SoundPlayer;
 using namespace waltz::engine::ScoreComponent;
-
 using namespace waltz::engine::SoundPlayer;
 
 namespace
@@ -20,22 +21,28 @@ namespace
         return slope * aIndex + aStartValue;
     }
 
-    double fadeInFunction(const int aIndex,
+    double fadeInFunction(const double wavData,
+                          const double aZeroLine,
+                          const int aIndex,
                           const int aLength)
     {
-        return linearFunction(aIndex,
-                              aLength,
-                              0,
-                              1);
+        return (wavData - aZeroLine) * linearFunction(aIndex,
+                                                      aLength,
+                                                      0,
+                                                      1)
+                + aZeroLine;
     }
 
-    double fadeOutFunction(const int aIndex,
-                                const int aLength)
+    double fadeOutFunction(const double wavData,
+                           const double aZeroLine,
+                           const int aIndex,
+                           const int aLength)
     {
-        return linearFunction(aIndex,
-                              aLength,
-                              1,
-                              0);
+        return (wavData - aZeroLine) * linearFunction(aIndex,
+                                                     aLength,
+                                                     1,
+                                                     0)
+               + aZeroLine;
     }
 }
 
@@ -143,7 +150,7 @@ void SoundData::appendData(const SoundData &aSoundData, const MilliSeconds &aSta
 
     while (mSoundVector_.length() < startTimeIndex)
     {
-        mSoundVector_.append(0);
+        mSoundVector_.append(mSoundDataInformation_.zeroLine());
     }
 
     QVector<double> appendDataVector(aSoundData.toVector());
@@ -154,21 +161,34 @@ void SoundData::appendData(const SoundData &aSoundData, const MilliSeconds &aSta
 }
 
 void SoundData::appendDataWithCrossfade(const SoundData &aSoundData,
+                                        const MilliSeconds& aStartTime,
                                         const MilliSeconds &aOverlapTime)
 {
     updateInformationIfNotInitialized(aSoundData.soundDataInformation());
+    int startTimeIndex = mSoundDataInformation_.calculateIndex(aStartTime);
     int overlapArrayLength = mSoundDataInformation_.calculateIndex(aOverlapTime);
+
+    if (mSoundVector_.length() > startTimeIndex)
+    {
+        mSoundVector_ = mSoundVector_.mid(0, startTimeIndex);
+    }
 
     for(int index = 0; index < aSoundData.toVector().length(); ++index)
     {
         if (index < overlapArrayLength - 1)
         {
+            double baseData =
+                    (mSoundVector_.at(mSoundVector_.length() - 1 - index) - mSoundDataInformation_.zeroLine())
+                    * fadeOutFunction(index, overlapArrayLength) + mSoundDataInformation_.zeroLine();
+            double appendData =
+                    (aSoundData.toVector().at(index) - mSoundDataInformation_.zeroLine())
+                    * fadeInFunction(index, overlapArrayLength) + mSoundDataInformation_.zeroLine();
+
             mSoundVector_[mSoundVector_.length() - 1 - index]
-                  = mSoundVector_.at(mSoundVector_.length() - 1 - index)
-                    * fadeOutFunction(index, overlapArrayLength)
-                    + aSoundData.toVector().at(index) * fadeInFunction(index, overlapArrayLength);
+                  = baseData + appendData;
             continue;
         }
+
         mSoundVector_.append(aSoundData.toVector().at(index));
     }
 }
@@ -187,38 +207,54 @@ SoundDataInformation SoundData::soundDataInformation() const
     return mSoundDataInformation_;
 }
 
+void SoundData::addFadeOut(const ScoreComponent::MilliSeconds& aLength)
+{
+    int fadeOutLength = mSoundDataInformation_.calculateIndex(aLength);
+    int startIndex = mSoundVector_.length() - fadeOutLength;
+
+    for(int index = startIndex; index < mSoundVector_.length(); ++index)
+    {
+        mSoundVector_[index] *= fadeOutFunction(index,fadeOutLength);
+    }
+}
+
+
 void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
-                           const ScoreComponent::TimeRange& aTimeRange)
+                           const ScoreComponent::TimeRange& aTimeRange,
+                           const WorldParametersCacheId& aWorldParametersCacheId)
 {
     WorldParameters worldParameters = {0};
     mSoundDataInformation_.setWorldParametersToValues(&worldParameters);
-
     int samplingFrequency = worldParameters.samplingFrequency;
     int inputLengh = mSoundVector_.size();
-    double *input = new double[inputLengh];
+    double *input = mSoundVector_.data();
 
-    for (int index = 0; index < inputLengh; ++index)
+    if(WorldParametersRepository::getInstance().hasWorldParammeters(aWorldParametersCacheId))
     {
-        input[index] = mSoundVector_.at(index);
+        WorldParametersRepository::getInstance().loadWorldParameters(aWorldParametersCacheId,
+                                                                     &worldParameters);
     }
+    else
+    {
+        Synthesizer::getInstance().estimateF0(input,
+                                              inputLengh,
+                                              &worldParameters);
 
-    Synthesizer::getInstance().estimateF0(input,
-                                          inputLengh,
-                                          &worldParameters);
-    Synthesizer::getInstance().SpectralEnvelopeEstimation(input,
+        Synthesizer::getInstance().SpectralEnvelopeEstimation(input,
+                                                              inputLengh,
+                                                              &worldParameters);
+        Synthesizer::getInstance().AperiodicityEstimation(input,
                                                           inputLengh,
                                                           &worldParameters);
-    Synthesizer::getInstance().AperiodicityEstimation(input,
-                                                      inputLengh,
-                                                      &worldParameters);
-
+        WorldParametersRepository::getInstance().registerWorldParameters(aWorldParametersCacheId,
+                                                                        &worldParameters);
+    }
     // pitch shift
     for(int index = 0; index < worldParameters.lengthOfF0; ++index)
     {
-        MilliSeconds pos = MilliSeconds((aTimeRange.length().value() / worldParameters.lengthOfF0)* index);
+        MilliSeconds pos = MilliSeconds((aTimeRange.length().value() / worldParameters.lengthOfF0)* index).add(aTimeRange.startTime());
         worldParameters.f0[index] = aPitchCurve->calculateValue(pos);
     }
-
     int lengthOfOutput =
             static_cast<int>((worldParameters.lengthOfF0 - 1) *
                               worldParameters.framePeriod / 1000.0 * samplingFrequency) + 1;
@@ -234,5 +270,6 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
         mSoundVector_.append(output[index]);
     }
     delete output;
-    delete input;
+    Synthesizer::getInstance().DestroyMemory(&worldParameters);
+    return;
 }
