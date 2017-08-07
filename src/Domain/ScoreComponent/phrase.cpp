@@ -71,7 +71,7 @@ SoundData Phrase::toSoundData() const
     {
         return SoundData();
     }
-    // 伸縮
+
     // 結合 まだ mNotes_の数とfragmentの数が異なる場合には対応していない
     for(int index = 1; index < mNotes_.length(); ++index)
     {
