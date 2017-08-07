@@ -84,6 +84,7 @@ void SoundData::initializeWavDataByByteArray(const QByteArray& aByteArray)
         stream >> out;
         mSoundVector_.append(out / zero_line);
     }
+    outputWaveDataForDebug("initial_output.txt");
 }
 
 
@@ -150,7 +151,7 @@ void SoundData::appendData(const SoundData &aSoundData, const MilliSeconds &aSta
 
     while (mSoundVector_.length() < startTimeIndex)
     {
-        mSoundVector_.append(mSoundDataInformation_.zeroLine());
+        mSoundVector_.append(0);
     }
 
     QVector<double> appendDataVector(aSoundData.toVector());
@@ -178,13 +179,13 @@ void SoundData::appendDataWithCrossfade(const SoundData &aSoundData,
         if (index < overlapArrayLength - 1)
         {
             double baseData = fadeOutFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
-                                              mSoundDataInformation_.zeroLine(),
+                                              0,
                                               index,
                                               overlapArrayLength);
             double appendData = fadeInFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
-                                                mSoundDataInformation_.zeroLine(),
-                                                index,
-                                                overlapArrayLength);
+                                               0,
+                                               index,
+                                               overlapArrayLength);
 
             mSoundVector_[mSoundVector_.length() - 1 - index]
                   = baseData + appendData;
@@ -209,21 +210,6 @@ SoundDataInformation SoundData::soundDataInformation() const
     return mSoundDataInformation_;
 }
 
-void SoundData::addFadeOut(const ScoreComponent::MilliSeconds& aLength)
-{
-    int fadeOutLength = mSoundDataInformation_.calculateIndex(aLength);
-    int startIndex = mSoundVector_.length() - fadeOutLength;
-
-    for(int index = startIndex; index < mSoundVector_.length(); ++index)
-    {
-        mSoundVector_[index] *= fadeOutFunction(
-                    mSoundVector_.at(index),
-                    mSoundDataInformation_.zeroLine(),
-                    index,fadeOutLength);
-    }
-}
-
-
 void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
                            const ScoreComponent::TimeRange& aTimeRange,
                            const WorldParametersCacheId& aWorldParametersCacheId)
@@ -232,7 +218,12 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
     mSoundDataInformation_.setWorldParametersToValues(&worldParameters);
     int samplingFrequency = worldParameters.samplingFrequency;
     int inputLengh = mSoundVector_.size();
-    double *input = mSoundVector_.data();
+    double *input = new double[inputLengh];
+
+    for (int index = 0; index < inputLengh; ++ index)
+    {
+        input[index] = mSoundVector_.at(index);
+    }
 
     if(WorldParametersRepository::getInstance().hasWorldParammeters(aWorldParametersCacheId))
     {
@@ -260,21 +251,37 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
         MilliSeconds pos = MilliSeconds((aTimeRange.length().value() / worldParameters.lengthOfF0)* index).add(aTimeRange.startTime());
         worldParameters.f0[index] = aPitchCurve->calculateValue(pos);
     }
-    int lengthOfOutput =
-            static_cast<int>((worldParameters.lengthOfF0 - 1) *
-                              worldParameters.framePeriod / 1000.0 * samplingFrequency) + 1;
-    double* output = new double[lengthOfOutput];
-
+    double* output = new double[inputLengh];
+    for(int index = 0; index < inputLengh; ++index)
+    {
+        output[index] = 0;
+    }
     Synthesizer::getInstance().WaveformSynthesis(&worldParameters,
                                                  samplingFrequency,
                                                  inputLengh,
                                                  output);
     mSoundVector_.clear();
-    for (int index = 0; index < lengthOfOutput; ++index)
+    for (int index = 0; index < (inputLengh - 1); ++index)
     {
         mSoundVector_.append(output[index]);
     }
-    delete output;
+
     Synthesizer::getInstance().DestroyMemory(&worldParameters);
+    delete output;
+    delete input;
     return;
+}
+
+void SoundData::outputWaveDataForDebug(const QString& aFileName) const
+{
+    QFile file(aFileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+         return;
+
+    QTextStream out(&file);
+    for(int index = 0; index < mSoundVector_.length(); ++index)
+    {
+        out << QString("%1\t%2").arg(index).arg(mSoundVector_.at(index)) << "\n";
+    }
+    file.close();
 }

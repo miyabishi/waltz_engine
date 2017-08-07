@@ -1,3 +1,4 @@
+#include <QTextStream>
 #include "pitchcurve.h"
 
 using namespace waltz::engine::ScoreComponent;
@@ -48,3 +49,18 @@ int PitchCurve::length() const
 {
     return mPitchCurve_.length();
 }
+
+void PitchCurve::outputForDebug(const QString& aFileName)
+{
+    QFile file(aFileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+         return;
+
+    QTextStream out(&file);
+    foreach(const PitchChangingPointPointer& point, mPitchCurve_)
+    {
+        out << QString("%1\t%2").arg(point->position().value()).arg(point->value()) << "\n";
+    }
+    file.close();
+}
+

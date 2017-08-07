@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QPointer>
 #include <QSharedPointer>
 #include <QObject>
 #include <QAudioOutput>
@@ -21,6 +20,7 @@ namespace waltz
 
             public:
                 Player(QObject* aParent = nullptr);
+                ~Player();
 
             public:
                 void start(const SoundData& aSoundData);
@@ -29,8 +29,9 @@ namespace waltz
                 void stateChangedHandler(QAudio::State);
 
             private:
-                QPointer<QAudioOutput> mAudioOutput_;
-                QBuffer mBuffer_;
+                QSharedPointer<QAudioOutput> mAudioOutput_;
+                QSharedPointer<QByteArray> mByteArray_;
+                QSharedPointer<QDataStream> mDataStream_;
 
             private:
                 Player(const Player& aOther);

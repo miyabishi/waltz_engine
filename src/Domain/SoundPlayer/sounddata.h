@@ -32,7 +32,6 @@ namespace waltz
                                              const waltz::engine::ScoreComponent::MilliSeconds& aStartTime,
                                              const waltz::engine::ScoreComponent::MilliSeconds& aOverlapTime);
                 void stretch(const ScoreComponent::MilliSeconds& aStartTime);
-                void addFadeOut(const ScoreComponent::MilliSeconds& aLength);
                 void pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
                                 const ScoreComponent::TimeRange& aTimeRange,
                                 const WorldParametersCacheId& aWorldParametersCacheId);
@@ -40,6 +39,7 @@ namespace waltz
                 QVector<double> toVector() const;
                 QByteArray toByteArray() const;
                 SoundDataInformation soundDataInformation() const;
+                void outputWaveDataForDebug(const QString& aFileName) const;
 
             private:
                 void updateInformationIfNotInitialized(const SoundDataInformation& aSoundDataInformation);

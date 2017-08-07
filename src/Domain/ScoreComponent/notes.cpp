@@ -1,9 +1,19 @@
+
+#include <qmath.h>
 #include "pitchchangingpoint.h"
 #include "alias.h"
 #include "notes.h"
 #include <QDebug>
 
 using namespace waltz::engine::ScoreComponent;
+
+namespace
+{
+    double sigmoid(double aX, double aGain)
+    {
+        return 1/(1 + exp(-aX * aGain));
+    }
+}
 
 Notes::Notes()
 {
@@ -64,15 +74,47 @@ int Notes::length() const
 
 PitchCurvePointer Notes::getPitchCurve() const
 {
-    PitchCurvePointer pitchCurve(new PitchCurve());
-    foreach(const NotePointer& note, mNotes_)
+    if(mNotes_.length() == 0)
     {
-        pitchCurve->append(PitchChangingPointPointer(
-                                       new PitchChangingPoint(note->noteStartTime().toMilliSeconds(), note->tone().frequency())));
-        pitchCurve->append(PitchChangingPointPointer(
-                                       new PitchChangingPoint(MilliSeconds(note->endTime().value() - 0.01) ,
-                                                              note->tone().frequency())));
+        return PitchCurvePointer();
     }
+    qDebug() << Q_FUNC_INFO << "get pitch curve";
+
+    PitchCurvePointer pitchCurve(new PitchCurve());
+
+    NotePointer firstNote = mNotes_.at(0);
+    pitchCurve->append(PitchChangingPointPointer(
+                                   new PitchChangingPoint(firstNote->noteStartTime().toMilliSeconds(),
+                                                          firstNote->tone().frequency())));
+
+    for(int index = 1; index < mNotes_.length(); ++index)
+    {
+
+        qDebug() << Q_FUNC_INFO << "note index:" << index;
+        double preNoteFrequency = mNotes_.at(index -1 )->tone().frequency();
+        NotePointer currentNote = mNotes_.at(index);
+
+        double currentNoteFrequency = currentNote->tone().frequency();
+        int portamentoLength = 200;
+        double currentTime = currentNote->noteStartTime().toMilliSeconds().value() - portamentoLength;
+
+        for(int pitchCurveIndex = 0; pitchCurveIndex < portamentoLength; ++ pitchCurveIndex)
+        {
+            double currentFrequency = preNoteFrequency +
+                    (currentNoteFrequency - preNoteFrequency) * sigmoid((double)(2 * pitchCurveIndex)/portamentoLength - 1.0, 5.0);
+
+            pitchCurve->append(PitchChangingPointPointer(
+                                           new PitchChangingPoint(MilliSeconds(currentTime),
+                                                                  currentFrequency)));
+
+            ++currentTime;
+        }
+
+        pitchCurve->append(PitchChangingPointPointer(
+                                       new PitchChangingPoint(currentNote->noteStartTime().toMilliSeconds(),
+                                                              currentNoteFrequency)));
+    }
+    qDebug() << Q_FUNC_INFO << "get pitch curve finished";
     return pitchCurve;
 }
 NotePointer Notes::at(int index) const

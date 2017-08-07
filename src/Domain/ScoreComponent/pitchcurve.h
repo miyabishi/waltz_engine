@@ -21,6 +21,7 @@ namespace waltz
                 void append(const PitchChangingPointPointer& aPitchChangingPoint);
                 int length() const;
                 double calculateValue(const MilliSeconds& aPosition);
+                void outputForDebug(const QString& aFileName);
 
             private:
                 QList<PitchChangingPointPointer> mPitchCurve_;

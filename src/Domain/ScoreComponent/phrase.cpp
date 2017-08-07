@@ -54,16 +54,17 @@ SoundData Phrase::toSoundData() const
     SoundData soundData(QByteArray(firstData.waveformRawData(),
                                    firstData.waveformRawDataSize()),
                         SoundDataInformation(sampleSize, sampleRate));
+    PitchCurvePointer pitchCurve = mNotes_.getPitchCurve();
+    //pitchCurve->outputForDebug("pitchCurve_.txt");
 
     NotePointer firstNote = mNotes_.at(0);
     // TODO WorldParametersCacheId を一意なものにすること
-    soundData.pitchShift(mNotes_.getPitchCurve(),
+    soundData.pitchShift(pitchCurve,
                          TimeRange(
                              firstNote->noteStartTime().toMilliSeconds().subtract(
                                  MilliSeconds(firstData.overlap().asMilliSeconds())),
                              firstNote->endTime()),
                          WorldParametersCacheId(QString::fromStdString(firstData.phonemes())));
-//    soundData.addFadeOut(MilliSeconds(100));
 
     // TODO
     if ( fragmentList.length() < mNotes_.length())
@@ -80,19 +81,18 @@ SoundData Phrase::toSoundData() const
                                     SoundDataInformation(sampleSize, sampleRate));
 
         NotePointer note = mNotes_.at(index);
-        fragmentSoundData.pitchShift(mNotes_.getPitchCurve(),
+        fragmentSoundData.pitchShift(pitchCurve,
                                      TimeRange(
                                          note->noteStartTime().toMilliSeconds().subtract(
                                              MilliSeconds(data.overlap().asMilliSeconds())),
                                          note->endTime()),
                                      WorldParametersCacheId(QString::fromStdString(data.phonemes())));
-//        soundData.addFadeOut(MilliSeconds(100));
+
         soundData.appendDataWithCrossfade(
                     fragmentSoundData,
                     note->noteStartTime().toMilliSeconds().subtract(mNotes_.startTime()),
                     MilliSeconds(data.overlap().asMilliSeconds()));
     }
-
     return soundData;
 }
 

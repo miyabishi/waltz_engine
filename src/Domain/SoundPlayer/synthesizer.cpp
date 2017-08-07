@@ -142,6 +142,8 @@ void Synthesizer::WaveformSynthesis(WorldParameters *aWorldParameters,
         aSamplingFrequency,
         aLengthOfOutput,
         aOutput);
+    aOutput[0] = 0;
+    aOutput[aLengthOfOutput - 1] = 0;
 }
 
 Synthesizer::Synthesizer()

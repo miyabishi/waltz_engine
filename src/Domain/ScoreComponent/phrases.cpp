@@ -33,6 +33,8 @@ SoundData Phrases::toSoundData() const
         soundData.appendData(mPhrases_.at(index)->toSoundData(),
                              mPhrases_.at(index)->phraseStartTime().toMilliSeconds());
     }
+//    soundData.outputWaveDataForDebug("phrase_output.txt");
+
     return soundData;
 }
 
