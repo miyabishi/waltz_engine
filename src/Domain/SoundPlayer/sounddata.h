@@ -31,10 +31,10 @@ namespace waltz
                 void appendDataWithCrossfade(const SoundData& aSoundData,
                                              const waltz::engine::ScoreComponent::MilliSeconds& aStartTime,
                                              const waltz::engine::ScoreComponent::MilliSeconds& aOverlapTime);
-                void stretch(const ScoreComponent::MilliSeconds& aStartTime);
-                void pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
-                                const ScoreComponent::TimeRange& aTimeRange,
-                                const WorldParametersCacheId& aWorldParametersCacheId);
+                void transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
+                               const ScoreComponent::TimeRange& aNoteTimeRange,
+                               const ScoreComponent::MilliSeconds& FixedRangeLength,
+                               const WorldParametersCacheId& aWorldParametersCacheId);
 
                 QVector<double> toVector() const;
                 QByteArray toByteArray() const;

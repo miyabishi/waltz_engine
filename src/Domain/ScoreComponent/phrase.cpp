@@ -59,12 +59,13 @@ SoundData Phrase::toSoundData() const
 
     NotePointer firstNote = mNotes_.at(0);
     // TODO WorldParametersCacheId を一意なものにすること
-    soundData.pitchShift(pitchCurve,
-                         TimeRange(
-                             firstNote->noteStartTime().toMilliSeconds().subtract(
-                                 MilliSeconds(firstData.overlap().asMilliSeconds())),
-                             firstNote->endTime()),
-                         WorldParametersCacheId(QString::fromStdString(firstData.phonemes())));
+    soundData.transform(pitchCurve,
+                        TimeRange(
+                            firstNote->noteStartTime().toMilliSeconds().subtract(
+                                MilliSeconds(firstData.overlap().asMilliSeconds())),
+                            firstNote->endTime()),
+                        MilliSeconds(firstData.lengthOfFixedRange().asMilliSeconds()),
+                        WorldParametersCacheId(QString::fromStdString(firstData.phonemes())));
 
     // TODO
     if ( fragmentList.length() < mNotes_.length())
@@ -72,7 +73,7 @@ SoundData Phrase::toSoundData() const
         return SoundData();
     }
 
-    // 結合 まだ mNotes_の数とfragmentの数が異なる場合には対応していない
+    // TODO: 結合 まだ mNotes_の数とfragmentの数が異なる場合には対応していない
     for(int index = 1; index < mNotes_.length(); ++index)
     {
         FragmentData data = fragmentList.at(index).at(0);
@@ -81,12 +82,13 @@ SoundData Phrase::toSoundData() const
                                     SoundDataInformation(sampleSize, sampleRate));
 
         NotePointer note = mNotes_.at(index);
-        fragmentSoundData.pitchShift(pitchCurve,
-                                     TimeRange(
-                                         note->noteStartTime().toMilliSeconds().subtract(
+        fragmentSoundData.transform(pitchCurve,
+                                    TimeRange(
+                                        note->noteStartTime().toMilliSeconds().subtract(
                                              MilliSeconds(data.overlap().asMilliSeconds())),
                                          note->endTime()),
-                                     WorldParametersCacheId(QString::fromStdString(data.phonemes())));
+                                    MilliSeconds(data.lengthOfFixedRange().asMilliSeconds()),
+                                    WorldParametersCacheId(QString::fromStdString(data.phonemes())));
 
         soundData.appendDataWithCrossfade(
                     fragmentSoundData,

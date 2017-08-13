@@ -210,9 +210,10 @@ SoundDataInformation SoundData::soundDataInformation() const
     return mSoundDataInformation_;
 }
 
-void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
-                           const ScoreComponent::TimeRange& aTimeRange,
-                           const WorldParametersCacheId& aWorldParametersCacheId)
+void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
+                          const ScoreComponent::TimeRange& aNoteTimeRange,
+                          const ScoreComponent::MilliSeconds& aFixedRangeLength,
+                          const WorldParametersCacheId& aWorldParametersCacheId)
 {
     WorldParameters worldParameters = {0};
     mSoundDataInformation_.setWorldParametersToValues(&worldParameters);
@@ -225,6 +226,7 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
         input[index] = mSoundVector_.at(index);
     }
 
+    // WORLパラメータの作成
     if(WorldParametersRepository::getInstance().hasWorldParammeters(aWorldParametersCacheId))
     {
         WorldParametersRepository::getInstance().loadWorldParameters(aWorldParametersCacheId,
@@ -245,31 +247,95 @@ void SoundData::pitchShift(const ScoreComponent::PitchCurvePointer aPitchCurve,
         WorldParametersRepository::getInstance().registerWorldParameters(aWorldParametersCacheId,
                                                                         &worldParameters);
     }
-    // pitch shift
+    // 伸縮
+    int outputLength = mSoundDataInformation_.calculateIndex(aNoteTimeRange.length());
+    double stretchRate = (double)outputLength / inputLengh;
+    double* output = new double[outputLength];
+
+    WorldParameters outputWorldParameters = {0};
+    int outputF0Length = int(worldParameters.lengthOfF0 * stretchRate);
+    outputWorldParameters.lengthOfF0 = outputF0Length;
+    outputWorldParameters.framePeriod = worldParameters.framePeriod;
+    outputWorldParameters.samplingFrequency = worldParameters.samplingFrequency;
+    outputWorldParameters.sizeOfFFT = worldParameters.sizeOfFFT;
+    outputWorldParameters.f0 = new double[outputF0Length];
+    outputWorldParameters.timeAxis = new double[outputF0Length];
+    outputWorldParameters.spectrogram = new double *[outputF0Length];
+    outputWorldParameters.aperiodicity = new double *[outputF0Length];
+    int fixedRangeF0Length = aFixedRangeLength.toF0ArrayLength();
+
+    qDebug() << "source length of f0:" << worldParameters.lengthOfF0;
+    qDebug() << "input length:" << inputLengh;
+    qDebug() << "output length of f0:" << outputWorldParameters.lengthOfF0;
+    qDebug() << "output length:" << outputLength;
+
+
+    for(int timeIndex = 0; timeIndex < outputF0Length; ++timeIndex)
+    {
+        // initialize
+        int paramArrayLength = worldParameters.sizeOfFFT / 2 + 1;
+        outputWorldParameters.spectrogram[timeIndex] = new double[paramArrayLength];
+        outputWorldParameters.aperiodicity[timeIndex] = new double[paramArrayLength];
+        outputWorldParameters.timeAxis[timeIndex] = worldParameters.framePeriod * timeIndex / 1000.0;
+
+        // pitch
+        MilliSeconds pos = MilliSeconds(outputWorldParameters.timeAxis[timeIndex]).add(aNoteTimeRange.startTime());
+        outputWorldParameters.f0[timeIndex] = aPitchCurve->calculateValue(pos);
+
+        // fixed range
+        if (timeIndex < fixedRangeF0Length && timeIndex < worldParameters.lengthOfF0)
+        {
+            for(int arrayIndex = 0; arrayIndex < paramArrayLength; ++arrayIndex)
+            {
+                outputWorldParameters.spectrogram[timeIndex][arrayIndex] =
+                        worldParameters.spectrogram[timeIndex][arrayIndex];
+                outputWorldParameters.aperiodicity[timeIndex][arrayIndex] =
+                        worldParameters.aperiodicity[timeIndex][arrayIndex];
+            }
+            continue;
+        }
+
+        //flexible range
+        for(int arrayIndex = 0; arrayIndex < paramArrayLength; ++arrayIndex)
+        {
+            int sourceTimeIndex = (double)timeIndex / stretchRate;
+            outputWorldParameters.spectrogram[timeIndex][arrayIndex] =
+                    worldParameters.spectrogram[sourceTimeIndex][arrayIndex];
+            outputWorldParameters.aperiodicity[timeIndex][arrayIndex] =
+                    worldParameters.aperiodicity[sourceTimeIndex][arrayIndex];
+        }
+    }
+
+
+    /*
+    double* output = new double[inputLengh];
+
+    // ピッチ変換
     for(int index = 0; index < worldParameters.lengthOfF0; ++index)
     {
-        MilliSeconds pos = MilliSeconds((aTimeRange.length().value() / worldParameters.lengthOfF0)* index).add(aTimeRange.startTime());
+        MilliSeconds pos = MilliSeconds((aNoteTimeRange.length().value() / worldParameters.lengthOfF0)* index).add(aNoteTimeRange.startTime());
         worldParameters.f0[index] = aPitchCurve->calculateValue(pos);
     }
-    double* output = new double[inputLengh];
+
     for(int index = 0; index < inputLengh; ++index)
     {
         output[index] = 0;
     }
-    Synthesizer::getInstance().WaveformSynthesis(&worldParameters,
+    */
+    Synthesizer::getInstance().WaveformSynthesis(&outputWorldParameters,
                                                  samplingFrequency,
-                                                 inputLengh,
+                                                 outputLength,
                                                  output);
     mSoundVector_.clear();
-    for (int index = 0; index < (inputLengh - 1); ++index)
+    for (int index = 0; index < outputLength; ++index)
     {
         mSoundVector_.append(output[index]);
     }
 
     Synthesizer::getInstance().DestroyMemory(&worldParameters);
+    Synthesizer::getInstance().DestroyMemory(&outputWorldParameters);
     delete output;
     delete input;
-    return;
 }
 
 void SoundData::outputWaveDataForDebug(const QString& aFileName) const
