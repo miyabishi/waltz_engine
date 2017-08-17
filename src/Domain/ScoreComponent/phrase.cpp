@@ -50,12 +50,13 @@ SoundData Phrase::toSoundData() const
     FragmentData firstData = fragmentList.at(0).at(0);
     SampleSize sampleSize = SampleSize(firstData.sampleSize());
     SampleRate sampleRate = SampleRate(firstData.sampleRate());
+    SoundDataInformation soundDataInformation(sampleSize, sampleRate);
 
     SoundData soundData(QByteArray(firstData.waveformRawData(),
                                    firstData.waveformRawDataSize()),
-                        SoundDataInformation(sampleSize, sampleRate));
+                        soundDataInformation);
     PitchCurvePointer pitchCurve = mNotes_.getPitchCurve();
-    //pitchCurve->outputForDebug("pitchCurve_.txt");
+    pitchCurve->outputForDebug("pitchCurve_.txt");
 
     NotePointer firstNote = mNotes_.at(0);
     // TODO WorldParametersCacheId を一意なものにすること
@@ -79,7 +80,7 @@ SoundData Phrase::toSoundData() const
         FragmentData data = fragmentList.at(index).at(0);
         SoundData fragmentSoundData(QByteArray(data.waveformRawData(),
                                                data.waveformRawDataSize()),
-                                    SoundDataInformation(sampleSize, sampleRate));
+                                    soundDataInformation);
 
         NotePointer note = mNotes_.at(index);
         fragmentSoundData.transform(pitchCurve,

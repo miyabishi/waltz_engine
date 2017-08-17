@@ -21,31 +21,26 @@ Player::~Player()
 
 void Player::start(const SoundData& aSoundData)
 {
-//    if (mAudioOutput_.isNull())
+    aSoundData.outputWaveDataForDebug("play_data.txt");
+    SoundDataInformation soundDataInformation = aSoundData.soundDataInformation();
+    QAudioFormat format = soundDataInformation.createAudioFormat();
+    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+
+    if (!info.isFormatSupported(format))
     {
-        SoundDataInformation soundDataInformation = aSoundData.soundDataInformation();
-        QAudioFormat format = soundDataInformation.createAudioFormat();
-        QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-
-        if (!info.isFormatSupported(format))
-        {
-            waltz::engine::Notifier::TaskTrayNotifier::getInstance().notifyError("Raw audio format not supported by backend, cannot play audio.");
-            return;
-        }
-
-        mAudioOutput_ = QSharedPointer<QAudioOutput>(new QAudioOutput(format, this));
-        mByteArray_ = QSharedPointer<QByteArray>(new QByteArray(aSoundData.toByteArray()));
-        mDataStream_ = QSharedPointer<QDataStream>(new QDataStream(mByteArray_.data(), QIODevice::ReadWrite));
-        QThread::sleep(1);
-        mAudioOutput_->setNotifyInterval(50);
-        mAudioOutput_->setBufferSize(16 * 1280);
-        //mAudioOutput_->setBufferSize(32768);
-        //mAudioOutput_->setBufferSize(44100);
-        connect(mAudioOutput_.data(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(stateChangedHandler(QAudio::State)));
-        mAudioOutput_->start(mDataStream_->device());
+        waltz::engine::Notifier::TaskTrayNotifier::getInstance().notifyError("Raw audio format not supported by backend, cannot play audio.");
         return;
     }
-    mByteArray_->append(aSoundData.toByteArray());
+
+    mAudioOutput_ = QSharedPointer<QAudioOutput>(new QAudioOutput(format, this));
+    mByteArray_ = QSharedPointer<QByteArray>(new QByteArray(aSoundData.toByteArray()));
+    mDataStream_ = QSharedPointer<QDataStream>(new QDataStream(mByteArray_.data(), QIODevice::ReadWrite));
+    QThread::sleep(1);
+    mAudioOutput_->setNotifyInterval(50);
+    mAudioOutput_->setBufferSize(16 * 1280);
+    connect(mAudioOutput_.data(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(stateChangedHandler(QAudio::State)));
+    mAudioOutput_->start(mDataStream_->device());
+    return;
 }
 
 void Player::stateChangedHandler(QAudio::State aNewState)
