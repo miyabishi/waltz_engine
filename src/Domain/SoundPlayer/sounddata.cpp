@@ -44,6 +44,21 @@ namespace
                                                      0)
                + aZeroLine;
     }
+
+    void outputToFile(double* array, int length, const QString& aFileName)
+    {
+        QFile file(aFileName);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+             return;
+
+        QTextStream out(&file);
+        for(int index = 0; index < length; ++index)
+        {
+            out << QString("%1\t%2").arg(index).arg(array[index]) << "\n";
+        }
+        file.close();
+
+    }
 }
 
 SoundData::SoundData()
@@ -84,7 +99,7 @@ void SoundData::initializeWavDataByByteArray(const QByteArray& aByteArray)
         stream >> out;
         mSoundVector_.append(out / zero_line);
     }
-    outputWaveDataForDebug("initial_output.txt");
+    //outputWaveDataForDebug("initial_output.txt");
 }
 
 
@@ -268,12 +283,6 @@ void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
             (double)(outputF0Length - fixedRangeF0Length) /
             (worldParameters.lengthOfF0 - fixedRangeF0Length);
 
-    qDebug() << "source length of f0:" << worldParameters.lengthOfF0;
-    qDebug() << "input length:" << inputLengh;
-    qDebug() << "output length of f0:" << outputWorldParameters.lengthOfF0;
-    qDebug() << "output length:" << outputLength;
-    qDebug() << "stretchRate:" << stretchRate;
-    qDebug() << "f0FlexibleRangeStretchRate:" << f0FlexibleRangeStretchRate;
 
 
     for(int timeIndex = 0; timeIndex < outputF0Length; ++timeIndex)
@@ -285,8 +294,12 @@ void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
         outputWorldParameters.timeAxis[timeIndex] = worldParameters.framePeriod * timeIndex / 1000.0;
 
         // pitch
-        MilliSeconds pos = MilliSeconds(outputWorldParameters.timeAxis[timeIndex]).add(aNoteTimeRange.startTime());
+        MilliSeconds pos = MilliSeconds(
+                    (aNoteTimeRange.length().value() / outputWorldParameters.lengthOfF0)* timeIndex)
+                    .add(aNoteTimeRange.startTime());
         outputWorldParameters.f0[timeIndex] = aPitchCurve->calculateValue(pos);
+
+
 
         int sourceTimeIndex = 0;
         // fixed range
@@ -299,7 +312,6 @@ void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
             sourceTimeIndex = (double)(timeIndex) / f0FlexibleRangeStretchRate
                               + fixedRangeF0Length - (double)(fixedRangeF0Length)/f0FlexibleRangeStretchRate;
         }
-
 
         //flexible range
         for(int arrayIndex = 0; arrayIndex < paramArrayLength; ++arrayIndex)
