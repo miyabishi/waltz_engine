@@ -73,8 +73,10 @@ void Vocal::singSingleNote(const Note& aNote)
 
 void Vocal::sing(const Score &aScore)
 {
+    qDebug() << Q_FUNC_INFO;
     if(! mVocalAgent_.isLibraryLoaded())
     {
+        qDebug() << Q_FUNC_INFO << __LINE__ << "vocal agent is not loaded.";
         return;
     }
     mPlayer_.start(aScore.toSoundData());

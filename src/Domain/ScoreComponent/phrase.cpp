@@ -40,13 +40,17 @@ std::vector<waltz::agent::IAlias*> Phrase::aliases() const
 
 SoundData Phrase::toSoundData() const
 {
+    qDebug() << Q_FUNC_INFO;
     WaltzVocalAgent* agent = Vocal::getInstance().vocalAgent();
     if (agent == 0 || mNotes_.length() == 0)
     {
         return SoundData();
     }
-
+    qDebug() << Q_FUNC_INFO << __LINE__ << "try to get fragmentlist";
     FragmentList fragmentList = agent->phraseToFragmentList(this);
+    qDebug() << Q_FUNC_INFO << __LINE__ << fragmentList.length();
+    if (fragmentList.length() == 0) return SoundData();
+
     FragmentData firstData = fragmentList.at(0).at(0);
     SampleSize sampleSize = SampleSize(firstData.sampleSize());
     SampleRate sampleRate = SampleRate(firstData.sampleRate());
@@ -59,6 +63,7 @@ SoundData Phrase::toSoundData() const
     pitchCurve->outputForDebug("pitchCurve_.txt");
 
     NotePointer firstNote = mNotes_.at(0);
+    qDebug() << Q_FUNC_INFO << __LINE__;
     // TODO WorldParametersCacheId を一意なものにすること
     soundData.transform(pitchCurve,
                         TimeRange(
@@ -67,6 +72,7 @@ SoundData Phrase::toSoundData() const
                             firstNote->endTime()),
                         MilliSeconds(firstData.lengthOfFixedRange().asMilliSeconds()),
                         WorldParametersCacheId(QString::fromStdString(firstData.phonemes())));
+    qDebug() << Q_FUNC_INFO << __LINE__;
 
     // TODO
     if ( fragmentList.length() < mNotes_.length())
@@ -96,6 +102,7 @@ SoundData Phrase::toSoundData() const
                     note->noteStartTime().toMilliSeconds().subtract(mNotes_.startTime()),
                     MilliSeconds(data.overlap().asMilliSeconds()));
     }
+    qDebug() << Q_FUNC_INFO << __LINE__;
     return soundData;
 }
 

@@ -1,11 +1,25 @@
 #include <QDebug>
 #include <QDataStream>
 #include <QThread>
+#include <waltz_common/parameters.h>
+#include <waltz_common/message.h>
+#include <waltz_common/commandid.h>
 #include "sounddata.h"
 #include "player.h"
 #include "src/Notifier/tasktraynotifier.h"
+#include "src/Communicator/communicationserver.h"
 
+
+using namespace waltz::common::Communicator;
+using namespace waltz::common::Commands;
+using namespace waltz::engine::Communicator;
 using namespace waltz::engine::SoundPlayer;
+
+
+namespace
+{
+    const CommandId COMMAND_ID_ACTIVE_PLAY_BUTTON("ActivePlayButton");
+}
 
 Player::Player(QObject* aParent)
     : QObject(aParent)
@@ -21,6 +35,7 @@ Player::~Player()
 
 void Player::start(const SoundData& aSoundData)
 {
+    qDebug() << Q_FUNC_INFO;
     aSoundData.outputWaveDataForDebug("play_data.txt");
     SoundDataInformation soundDataInformation = aSoundData.soundDataInformation();
     QAudioFormat format = soundDataInformation.createAudioFormat();
@@ -49,9 +64,10 @@ void Player::stateChangedHandler(QAudio::State aNewState)
     switch(aNewState)
     {
     case QAudio::IdleState:
-    //        mAudioOutput_->stop();
+        CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_ACTIVE_PLAY_BUTTON));
         break;
     case QAudio::StoppedState:
+        CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_ACTIVE_PLAY_BUTTON));
         if (mAudioOutput_->error() == QAudio::NoError) {
             return;
         }
@@ -59,6 +75,7 @@ void Player::stateChangedHandler(QAudio::State aNewState)
         waltz::engine::Notifier::TaskTrayNotifier::getInstance().notifyError("audio output error.");
         break;
     default:
+
         break;
     }
 }

@@ -23,5 +23,6 @@ void PlayScoreCommand::exec(const Parameters &aParameters)
 {
     qDebug() << Q_FUNC_INFO << "play score!";
     waltz::engine::ScoreComponent::Score score(aParameters);
+    qDebug() << Q_FUNC_INFO << "score loaded";
     Vocal::getInstance().sing(score);
 }

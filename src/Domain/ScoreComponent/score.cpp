@@ -15,6 +15,8 @@ namespace
 
 Score::Score(const Parameters& aParameters)
 {
+    qDebug() << "score constructor";
+    qDebug() << aParameters.find(PARAMETER_NAME_NOTE_LIST).value().toArray();
     ParametersList noteList(aParameters.find(PARAMETER_NAME_NOTE_LIST).value().toArray());
     if (noteList.size() == 0)
     {
@@ -56,6 +58,7 @@ Score& Score::operator=(const Score& aOther)
 
 SoundData Score::toSoundData() const
 {
+    qDebug() << Q_FUNC_INFO;
     return mPhrases_.toSoundData();
 }
 

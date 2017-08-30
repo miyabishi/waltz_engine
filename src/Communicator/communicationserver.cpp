@@ -26,7 +26,7 @@ CommunicationServer::CommunicationServer()
     : mServer_(new QWebSocketServer(QStringLiteral("Waltz Vocal Engine"),
                                     QWebSocketServer::NonSecureMode,
                                     this))
-{
+{    
     if (! mServer_->listen(QHostAddress::LocalHost, 8080))
     {
         return;
@@ -37,6 +37,8 @@ CommunicationServer::CommunicationServer()
 
 CommunicationServer::~CommunicationServer()
 {
+    qDebug() << Q_FUNC_INFO << "CommunicationServer is destroyed";
+
     mServer_->close();
     qDeleteAll(mClients_.begin(), mClients_.end());
 }
@@ -47,7 +49,7 @@ void CommunicationServer::onNewConnection()
 
     connect(pSocket, SIGNAL(binaryMessageReceived(QByteArray)), this, SLOT(processMessage(QByteArray)));
     connect(pSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
-    mClients_.append(pSocket);
+    mClients_ << pSocket;
 }
 
 
@@ -59,13 +61,18 @@ void CommunicationServer::processMessage(QByteArray aData)
 
 void CommunicationServer::sendMessage(const Message &aMessage)
 {
-    QWebSocket *client = qobject_cast<QWebSocket *>(sender());
+    qDebug() << Q_FUNC_INFO;
+    qDebug() << "send message" << aMessage.toByteArray();
 
-    if (client == 0)
+    foreach (QWebSocket* client, mClients_)
     {
-        return;
+        if(client == 0)
+        {
+            continue;
+        }
+        client->sendBinaryMessage(aMessage.toByteArray());
     }
-    client->sendBinaryMessage(aMessage.toByteArray());
+    return;
 }
 
 void CommunicationServer::socketDisconnected()
@@ -73,6 +80,7 @@ void CommunicationServer::socketDisconnected()
     QWebSocket *client = qobject_cast<QWebSocket *>(sender());
     if (client == 0)
     {
+        qDebug() << "Client not found";
         return;
     }
     mClients_.removeAll(client);

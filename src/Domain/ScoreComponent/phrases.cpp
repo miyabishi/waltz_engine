@@ -27,13 +27,14 @@ void Phrases::apend(const PhrasePointer &aPhrase)
 
 SoundData Phrases::toSoundData() const
 {
+    qDebug() << Q_FUNC_INFO;
     SoundData soundData;
     for(int index = 0; index < mPhrases_.length(); ++index)
     {
+        qDebug() << index;
         soundData.appendData(mPhrases_.at(index)->toSoundData(),
                              mPhrases_.at(index)->phraseStartTime().toMilliSeconds());
     }
-//    soundData.outputWaveDataForDebug("phrase_output.txt");
 
     return soundData;
 }
