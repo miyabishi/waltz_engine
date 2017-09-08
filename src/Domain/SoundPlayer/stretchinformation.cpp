@@ -5,12 +5,12 @@ using namespace waltz::engine::ScoreComponent;
 
 StretchInformation::StretchInformation(
         const NoteLength aNoteLength)
-    :mNoteLength_(aNoteLength)
+  :mNoteLength_(aNoteLength)
 {
 }
 
 StretchInformation::StretchInformation(const StretchInformation &aOther)
-    :mNoteLength_(aOther.mNoteLength_)
+  :mNoteLength_(aOther.mNoteLength_)
 {
 }
 

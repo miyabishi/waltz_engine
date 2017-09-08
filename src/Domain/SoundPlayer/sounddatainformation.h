@@ -4,11 +4,11 @@
 #include <QAudioFormat>
 #include <QByteArray>
 #include <QSharedPointer>
+
 #include "samplerate.h"
 #include "samplesize.h"
 #include "synthesizer.h"
 #include "src/Domain/ScoreComponent/milliseconds.h"
-
 
 
 namespace waltz
@@ -38,6 +38,7 @@ namespace waltz
                 SampleSize mSampleSize_;
                 SampleRate mSampleRate_;
             };
+            typedef QSharedPointer<SoundDataInformation> SoundDataInformationPointer;
 
         } // namespace SoundPlayer
     } // namespace engine

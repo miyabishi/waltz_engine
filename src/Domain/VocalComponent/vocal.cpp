@@ -66,7 +66,7 @@ void Vocal::singSingleNote(const Note& aNote)
     Notes notes;
     notes.append(temporaryNote);
     Phrase phrase(notes);
-    SoundData soundData = phrase.toSoundData();
+    SoundDataPointer soundData = phrase.toSoundData();
 
     mPlayer_.start(soundData);
 }

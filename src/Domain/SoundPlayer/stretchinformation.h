@@ -10,7 +10,6 @@ namespace waltz
     {
         namespace SondPlayer
         {
-
             class StretchInformation
             {
             public:

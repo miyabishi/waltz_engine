@@ -71,7 +71,9 @@ SOURCES += main.cpp \
     src/Domain/ScoreComponent/pitchchangingpoint.cpp \
     src/Domain/ScoreComponent/timerange.cpp \
     src/Domain/SoundPlayer/worldparameterscache.cpp \
-    src/Domain/SoundPlayer/worldparameterscacheid.cpp
+    src/Domain/SoundPlayer/worldparameterscacheid.cpp \
+    src/FileIO/wavfilewriter.cpp \
+    src/FileIO/wavfile.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -125,7 +127,8 @@ HEADERS  += \
     src/Domain/ScoreComponent/timerange.h \
     src/Domain/SoundPlayer/worldparameters.h \
     src/Domain/SoundPlayer/worldparameterscache.h \
-    src/Domain/SoundPlayer/worldparameterscacheid.h
+    src/Domain/SoundPlayer/worldparameterscacheid.h \
+    src/FileIO/wavfile.h
 
 RESOURCES += \
     resource/waltzengine.qrc

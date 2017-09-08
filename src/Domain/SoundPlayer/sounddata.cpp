@@ -5,7 +5,6 @@
 #include "worldparametersrepository.h"
 #include "sounddata.h"
 
-
 using namespace waltz::engine::SoundPlayer;
 using namespace waltz::engine::ScoreComponent;
 using namespace waltz::engine::SoundPlayer;
@@ -67,31 +66,28 @@ SoundData::SoundData()
 {
 }
 
-SoundData::SoundData(const QByteArray& aData,
-                     const SoundDataInformation& aSoundDataInformation)
+SoundData::SoundData(QSharedPointer<QByteArray> aData,
+                     SoundDataInformationPointer aSoundDataInformation)
     : mSoundVector_()
     , mSoundDataInformation_(aSoundDataInformation)
+    , mData_(aData)
 {
-    initializeWavDataByByteArray(aData);
+    initializeWavDataByByteArray();
 }
 
 SoundData::~SoundData()
 {
 }
 
-void SoundData::initializeWavDataByByteArray(const QByteArray& aByteArray)
+void SoundData::initializeWavDataByByteArray()
 {
     mSoundVector_.clear();
-    QBuffer buffer;
-    buffer.setData(aByteArray);
-    buffer.open(QIODevice::ReadOnly);
+    int quantization_byte = mSoundDataInformation_->quantizationByte();
+    double zero_line = mSoundDataInformation_->zeroLine();
 
-    int quantization_byte = mSoundDataInformation_.quantizationByte();
-    double zero_line = mSoundDataInformation_.zeroLine();
-
-    QDataStream stream(aByteArray);
+    QDataStream stream(*mData_.data());
     stream.setByteOrder(QDataStream::LittleEndian);
-    int lengthOfOutput = aByteArray.length() / quantization_byte;
+    int lengthOfOutput = mData_->length() / quantization_byte;
 
     for (int index = 0; index < lengthOfOutput; ++index)
     {
@@ -99,7 +95,6 @@ void SoundData::initializeWavDataByByteArray(const QByteArray& aByteArray)
         stream >> out;
         mSoundVector_.append(out / zero_line);
     }
-    //outputWaveDataForDebug("initial_output.txt");
 }
 
 
@@ -135,29 +130,15 @@ int16_t SoundData::roudedSoundValue(int aIndex) const
     return value;
 }
 
-SoundData::SoundData(const SoundData& aOther)
-    : mSoundVector_(aOther.mSoundVector_)
-    , mSoundDataInformation_(aOther.mSoundDataInformation_)
-{
-}
-
-SoundData& SoundData::operator=(const SoundData& aOther)
-{
-    mSoundVector_ = aOther.mSoundVector_;
-    mSoundDataInformation_ = aOther.mSoundDataInformation_;
-
-    return (*this);
-}
-
 QVector<double> SoundData::toVector() const
 {
     return mSoundVector_;
 }
 
-void SoundData::appendData(const SoundData &aSoundData, const MilliSeconds &aStartTime)
+void SoundData::appendData(QSharedPointer<SoundData> aSoundData, const MilliSeconds &aStartTime)
 {
-    updateInformationIfNotInitialized(aSoundData.soundDataInformation());
-    int startTimeIndex = mSoundDataInformation_.calculateIndex(aStartTime);
+    updateInformationIfNotInitialized(aSoundData->soundDataInformation());
+    int startTimeIndex = mSoundDataInformation_->calculateIndex(aStartTime);
 
     if (mSoundVector_.length() > startTimeIndex)
     {
@@ -169,29 +150,35 @@ void SoundData::appendData(const SoundData &aSoundData, const MilliSeconds &aSta
         mSoundVector_.append(0);
     }
 
-    QVector<double> appendDataVector(aSoundData.toVector());
+    QVector<double> appendDataVector(aSoundData->toVector());
     for(int index = 0; index < appendDataVector.length(); ++index)
     {
         mSoundVector_.append(appendDataVector.at(index));
     }
 }
 
-void SoundData::appendDataWithCrossfade(const SoundData &aSoundData,
-                                        const MilliSeconds& aStartTime,
+void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
+                                        const MilliSeconds &aStartTime,
                                         const MilliSeconds &aOverlapTime)
 {
-    updateInformationIfNotInitialized(aSoundData.soundDataInformation());
-    int startTimeIndex = mSoundDataInformation_.calculateIndex(aStartTime);
-    int overlapArrayLength = mSoundDataInformation_.calculateIndex(aOverlapTime);
+    updateInformationIfNotInitialized(aSoundData->soundDataInformation());
+    int startTimeIndex = mSoundDataInformation_->calculateIndex(aStartTime);
+    int overlapArrayLength = mSoundDataInformation_->calculateIndex(aOverlapTime);
 
-    if (mSoundVector_.length() > startTimeIndex)
+    if (mSoundVector_.length() > (startTimeIndex + overlapArrayLength))
     {
-        mSoundVector_ = mSoundVector_.mid(0, startTimeIndex);
+        mSoundVector_ = mSoundVector_.mid(0, startTimeIndex + overlapArrayLength);
     }
 
-    for(int index = 0; index < aSoundData.toVector().length(); ++index)
+    while (mSoundVector_.length() < (startTimeIndex + overlapArrayLength))
     {
-        if (index < overlapArrayLength - 1)
+        mSoundVector_.append(0);
+    }
+
+
+    for(int index = 0; index < aSoundData->toVector().length(); ++index)
+    {
+        if (index < overlapArrayLength)
         {
             double baseData = fadeOutFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
                                               0,
@@ -207,20 +194,20 @@ void SoundData::appendDataWithCrossfade(const SoundData &aSoundData,
             continue;
         }
 
-        mSoundVector_.append(aSoundData.toVector().at(index));
+        mSoundVector_.append(aSoundData->toVector().at(index));
     }
 }
 
-void SoundData::updateInformationIfNotInitialized(const SoundDataInformation& aSoundDataInformation)
+void SoundData::updateInformationIfNotInitialized(SoundDataInformationPointer aSoundDataInformation)
 {
-    if (mSoundDataInformation_.isInitialized())
+    if (! mSoundDataInformation_.isNull() && mSoundDataInformation_->isInitialized())
     {
         return;
     }
     mSoundDataInformation_ = aSoundDataInformation;
 }
 
-SoundDataInformation SoundData::soundDataInformation() const
+SoundDataInformationPointer SoundData::soundDataInformation() const
 {
     return mSoundDataInformation_;
 }
@@ -231,7 +218,7 @@ void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
                           const WorldParametersCacheId& aWorldParametersCacheId)
 {
     WorldParameters worldParameters = {0};
-    mSoundDataInformation_.setWorldParametersToValues(&worldParameters);
+    mSoundDataInformation_->setWorldParametersToValues(&worldParameters);
     int samplingFrequency = worldParameters.samplingFrequency;
     int inputLengh = mSoundVector_.size();
     double *input = new double[inputLengh];
@@ -263,7 +250,7 @@ void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
                                                                         &worldParameters);
     }
     // 伸縮
-    int outputLength = mSoundDataInformation_.calculateIndex(aNoteTimeRange.length());
+    int outputLength = mSoundDataInformation_->calculateIndex(aNoteTimeRange.length());
     double stretchRate = (double)(outputLength) / inputLengh;
     double* output = new double[outputLength];
 
@@ -298,8 +285,6 @@ void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
                     (aNoteTimeRange.length().value() / outputWorldParameters.lengthOfF0)* timeIndex)
                     .add(aNoteTimeRange.startTime());
         outputWorldParameters.f0[timeIndex] = aPitchCurve->calculateValue(pos);
-
-
 
         int sourceTimeIndex = 0;
         // fixed range

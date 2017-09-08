@@ -21,7 +21,7 @@ namespace waltz
                 Phrases& operator=(const Phrases& aOther);
                 void apend(const PhrasePointer& aPhrase);
             public:
-                waltz::engine::SoundPlayer::SoundData toSoundData() const;
+                waltz::engine::SoundPlayer::SoundDataPointer toSoundData() const;
                 MilliSeconds length() const;
             private:
                 QList<PhrasePointer> mPhrases_;

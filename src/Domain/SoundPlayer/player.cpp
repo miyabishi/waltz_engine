@@ -8,6 +8,7 @@
 #include "player.h"
 #include "src/Notifier/tasktraynotifier.h"
 #include "src/Communicator/communicationserver.h"
+#include "src/FileIO/wavfile.h"
 
 
 using namespace waltz::common::Communicator;
@@ -33,12 +34,14 @@ Player::~Player()
 {
 }
 
-void Player::start(const SoundData& aSoundData)
+void Player::start(SoundDataPointer aSoundData)
 {
+    FileIO::WavFile wav("test.wav");
+    wav.write(aSoundData);
     qDebug() << Q_FUNC_INFO;
-    aSoundData.outputWaveDataForDebug("play_data.txt");
-    SoundDataInformation soundDataInformation = aSoundData.soundDataInformation();
-    QAudioFormat format = soundDataInformation.createAudioFormat();
+    aSoundData->outputWaveDataForDebug("play_data.txt");
+    SoundDataInformationPointer soundDataInformation = aSoundData->soundDataInformation();
+    QAudioFormat format = soundDataInformation->createAudioFormat();
     QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
 
     if (!info.isFormatSupported(format))
@@ -48,7 +51,7 @@ void Player::start(const SoundData& aSoundData)
     }
 
     mAudioOutput_ = QSharedPointer<QAudioOutput>(new QAudioOutput(format, this));
-    mByteArray_ = QSharedPointer<QByteArray>(new QByteArray(aSoundData.toByteArray()));
+    mByteArray_ = QSharedPointer<QByteArray>(new QByteArray(aSoundData->toByteArray()));
     mDataStream_ = QSharedPointer<QDataStream>(new QDataStream(mByteArray_.data(), QIODevice::ReadWrite));
     QThread::sleep(1);
     mAudioOutput_->setNotifyInterval(50);

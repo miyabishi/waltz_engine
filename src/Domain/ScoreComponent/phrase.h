@@ -28,13 +28,14 @@ namespace waltz
 
             public:
                 std::vector<waltz::agent::IAlias*> aliases() const;
-                waltz::engine::SoundPlayer::SoundData toSoundData() const;
+                waltz::engine::SoundPlayer::SoundDataPointer toSoundData();
                 PhraseStartTime phraseStartTime() const;
                 PhraseLength    phraseLength() const;
                 MilliSeconds    endTime() const;
 
             private:
                 Notes           mNotes_;
+                MilliSeconds    mPrecedingTime_;
             };
             typedef QSharedPointer<Phrase> PhrasePointer;
         } // namespace ScoreComponent

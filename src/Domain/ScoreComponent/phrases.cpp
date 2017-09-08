@@ -25,15 +25,14 @@ void Phrases::apend(const PhrasePointer &aPhrase)
     mPhrases_.append(aPhrase);
 }
 
-SoundData Phrases::toSoundData() const
+SoundDataPointer Phrases::toSoundData() const
 {
-    qDebug() << Q_FUNC_INFO;
-    SoundData soundData;
+    SoundDataPointer soundData(new SoundData());
     for(int index = 0; index < mPhrases_.length(); ++index)
     {
-        qDebug() << index;
-        soundData.appendData(mPhrases_.at(index)->toSoundData(),
-                             mPhrases_.at(index)->phraseStartTime().toMilliSeconds());
+        // 注意 toSoundDataでphraseStartTime が設定されている　リファクタ対象
+        soundData->appendData(mPhrases_.at(index)->toSoundData(),
+                              mPhrases_.at(index)->phraseStartTime().toMilliSeconds());
     }
 
     return soundData;

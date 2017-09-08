@@ -6,6 +6,7 @@
 #include <QAudioOutput>
 #include <QBuffer>
 #include "sounddatainformation.h"
+#include "sounddata.h"
 
 namespace waltz
 {
@@ -13,7 +14,6 @@ namespace waltz
     {
         namespace SoundPlayer
         {
-            class SoundData;
             class Player : public QObject
             {
                 Q_OBJECT
@@ -23,7 +23,7 @@ namespace waltz
                 ~Player();
 
             public:
-                void start(const SoundData& aSoundData);
+                void start(SoundDataPointer aSoundData);
 
             private slots:
                 void stateChangedHandler(QAudio::State);
