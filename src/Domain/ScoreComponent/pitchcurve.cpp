@@ -12,10 +12,8 @@ namespace
     }
 }
 
-
 PitchCurve::PitchCurve()
 {
-
 }
 
 void PitchCurve::append(const PitchChangingPointPointer& aPitchChangingPoint)
@@ -63,4 +61,3 @@ void PitchCurve::outputForDebug(const QString& aFileName)
     }
     file.close();
 }
-

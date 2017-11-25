@@ -89,8 +89,6 @@ PitchCurvePointer Notes::getPitchCurve() const
 
     for(int index = 1; index < mNotes_.length(); ++index)
     {
-
-        qDebug() << Q_FUNC_INFO << "note index:" << index;
         double preNoteFrequency = mNotes_.at(index -1 )->tone().frequency();
         NotePointer currentNote = mNotes_.at(index);
 
@@ -114,7 +112,6 @@ PitchCurvePointer Notes::getPitchCurve() const
                                        new PitchChangingPoint(currentNote->noteStartTime().toMilliSeconds(),
                                                               currentNoteFrequency)));
     }
-    qDebug() << Q_FUNC_INFO << "get pitch curve finished";
     return pitchCurve;
 }
 NotePointer Notes::at(int index) const

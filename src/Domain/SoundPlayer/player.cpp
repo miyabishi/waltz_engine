@@ -8,8 +8,6 @@
 #include "player.h"
 #include "src/Notifier/tasktraynotifier.h"
 #include "src/Communicator/communicationserver.h"
-#include "src/FileIO/wavfile.h"
-
 
 using namespace waltz::common::Communicator;
 using namespace waltz::common::Commands;
@@ -36,10 +34,6 @@ Player::~Player()
 
 void Player::start(SoundDataPointer aSoundData)
 {
-    FileIO::WavFile wav("test.wav");
-    wav.write(aSoundData);
-    qDebug() << Q_FUNC_INFO;
-    aSoundData->outputWaveDataForDebug("play_data.txt");
     SoundDataInformationPointer soundDataInformation = aSoundData->soundDataInformation();
     QAudioFormat format = soundDataInformation->createAudioFormat();
     QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
