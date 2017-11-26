@@ -24,7 +24,10 @@ namespace waltz
                 explicit Score(const common::Commands::Parameters& aParameters);
                 Score(const Score& aOther);
                 Score& operator=(const Score& aOther);
+
+            public:
                 waltz::engine::SoundPlayer::SoundDataPointer toSoundData() const;
+                void clear();
 
             private:
                 void loadPhrases(const common::Commands::ParametersList& aParameterList);

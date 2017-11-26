@@ -16,6 +16,11 @@ PitchCurve::PitchCurve()
 {
 }
 
+void PitchCurve::clear()
+{
+    mPitchCurve_.clear();
+}
+
 void PitchCurve::append(const PitchChangingPointPointer& aPitchChangingPoint)
 {
     mPitchCurve_.append(aPitchChangingPoint);

@@ -27,6 +27,11 @@ Score::Score(const Parameters& aParameters)
     loadPitchCurve(pitchCurve);
 }
 
+void Score::clear()
+{
+    mPitchCurve_->clear();
+}
+
 void Score::loadPitchCurve(const common::Commands::ParametersList &aPitchCurve)
 {
     for(int index = 0; index < aPitchCurve.size(); ++index)
@@ -69,6 +74,6 @@ Score& Score::operator=(const Score& aOther)
 
 SoundDataPointer Score::toSoundData() const
 {
-    return mPhrases_.toSoundData();
+    return mPhrases_.toSoundData(mPitchCurve_);
 }
 

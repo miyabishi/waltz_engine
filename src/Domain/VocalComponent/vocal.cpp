@@ -55,8 +55,9 @@ void Vocal::loadVoiceLibrary(const QString &aPath)
                         parameters));
 }
 
-void Vocal::singSingleNote(const Note& aNote)
+void Vocal::singSingleNote(const Note& /*aNote*/)
 {
+    /*
     if (! mVocalAgent_.isLibraryLoaded())
     {
         return;
@@ -66,9 +67,10 @@ void Vocal::singSingleNote(const Note& aNote)
     Notes notes;
     notes.append(temporaryNote);
     Phrase phrase(notes);
-    SoundDataPointer soundData = phrase.toSoundData();
-
+    SoundDataPointer soundData = phrase.toSoundData(
+                PitchCurvePointer(new PitchCurve()));
     mPlayer_.start(soundData);
+    */
 }
 
 void Vocal::sing(const Score &aScore)

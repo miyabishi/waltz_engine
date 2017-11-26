@@ -6,6 +6,7 @@
 #include "src/Domain/SoundPlayer/sounddata.h"
 #include "phrase.h"
 #include "milliseconds.h"
+#include "pitchcurve.h"
 
 namespace waltz
 {
@@ -20,9 +21,12 @@ namespace waltz
                 Phrases(const Phrases& aOther);
                 Phrases& operator=(const Phrases& aOther);
                 void apend(const PhrasePointer& aPhrase);
+
             public:
-                waltz::engine::SoundPlayer::SoundDataPointer toSoundData() const;
+                waltz::engine::SoundPlayer::SoundDataPointer toSoundData(
+                        const PitchCurvePointer aPitchCurve) const;
                 MilliSeconds length() const;
+
             private:
                 QList<PhrasePointer> mPhrases_;
             };

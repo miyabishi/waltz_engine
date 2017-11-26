@@ -22,5 +22,6 @@ PlayScoreCommand::PlayScoreCommand()
 void PlayScoreCommand::exec(const Parameters &aParameters)
 {
     waltz::engine::ScoreComponent::Score score(aParameters);
+//    score.clear();
     Vocal::getInstance().sing(score);
 }

@@ -115,7 +115,7 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                                            overlapTime);
     }
 
-    pitchCurve->outputForDebug("pitchCurve_debug.txt");
+    aPitchCurve->outputForDebug("pitchCurve_debug.txt");
     return soundData;
 }
 // ここのmPrecedingTime直したい。。。
