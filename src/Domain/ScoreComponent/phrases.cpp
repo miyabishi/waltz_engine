@@ -1,6 +1,4 @@
-#include <QDebug>
 #include "phrases.h"
-
 
 using namespace waltz::engine::ScoreComponent;
 using namespace waltz::engine::SoundPlayer;

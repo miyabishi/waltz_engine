@@ -1,9 +1,7 @@
-
 #include <qmath.h>
 #include "pitchchangingpoint.h"
 #include "alias.h"
 #include "notes.h"
-#include <QDebug>
 
 using namespace waltz::engine::ScoreComponent;
 
@@ -78,7 +76,6 @@ PitchCurvePointer Notes::getPitchCurve() const
     {
         return PitchCurvePointer();
     }
-    qDebug() << Q_FUNC_INFO << "get pitch curve";
 
     PitchCurvePointer pitchCurve(new PitchCurve());
 

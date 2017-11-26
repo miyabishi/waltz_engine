@@ -1,6 +1,5 @@
 #include <QtWebSockets/qwebsocketserver.h>
 #include <QtWebSockets/qwebsocket.h>
-#include <QDebug>
 #include "communicationserver.h"
 #include "src/Notifier/tasktraynotifier.h"
 #include "receiveddata.h"
@@ -37,8 +36,6 @@ CommunicationServer::CommunicationServer()
 
 CommunicationServer::~CommunicationServer()
 {
-    qDebug() << Q_FUNC_INFO << "CommunicationServer is destroyed";
-
     mServer_->close();
     qDeleteAll(mClients_.begin(), mClients_.end());
 }
@@ -61,9 +58,6 @@ void CommunicationServer::processMessage(QByteArray aData)
 
 void CommunicationServer::sendMessage(const Message &aMessage)
 {
-    qDebug() << Q_FUNC_INFO;
-    qDebug() << "send message" << aMessage.toByteArray();
-
     foreach (QWebSocket* client, mClients_)
     {
         if(client == 0)
@@ -78,11 +72,8 @@ void CommunicationServer::sendMessage(const Message &aMessage)
 void CommunicationServer::socketDisconnected()
 {
     QWebSocket *client = qobject_cast<QWebSocket *>(sender());
-    if (client == 0)
-    {
-        qDebug() << "Client not found";
-        return;
-    }
+    if (client == 0) return;
+
     mClients_.removeAll(client);
     client->deleteLater();
 }

@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <waltz_common/commandid.h>
 #include <waltz_common/parameters.h>
 

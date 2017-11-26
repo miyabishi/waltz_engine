@@ -1,4 +1,3 @@
-#include <QDebug>
 #include "phrase.h"
 #include "score.h"
 #include "notes.h"

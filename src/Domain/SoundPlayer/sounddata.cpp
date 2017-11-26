@@ -180,11 +180,12 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     {
         if (index < overlapArrayLength)
         {
+            qDebug() << Q_FUNC_INFO << "run cross fade";
             double baseData = fadeOutFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
                                               0,
                                               index,
                                               overlapArrayLength);
-            double appendData = fadeInFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
+            double appendData = fadeInFunction(aSoundData->toVector().at(index),
                                                0,
                                                index,
                                                overlapArrayLength);
@@ -193,9 +194,9 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
                   = baseData + appendData;
             continue;
         }
-
         mSoundVector_.append(aSoundData->toVector().at(index));
     }
+    qDebug() << Q_FUNC_INFO << "finish cross fade";
 }
 
 void SoundData::updateInformationIfNotInitialized(SoundDataInformationPointer aSoundDataInformation)

@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QAudioDeviceInfo>
 #include "sounddatainformation.h"
 #include "src/Notifier/tasktraynotifier.h"
@@ -78,8 +77,6 @@ int SoundDataInformation::calculateIndex(waltz::engine::ScoreComponent::MilliSec
 
 void SoundDataInformation::setWorldParametersToValues(WorldParameters* aWorldParameters)
 {
-    qDebug() << Q_FUNC_INFO;
-    qDebug() << mSampleRate_.value();
     aWorldParameters->samplingFrequency = mSampleRate_.value();
     aWorldParameters->framePeriod = EngineSettings::getInstance().framePeriod();
 }

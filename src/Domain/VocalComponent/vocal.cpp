@@ -1,5 +1,4 @@
 #include <QDataStream>
-#include <QDebug>
 #include <waltz_common/parameters.h>
 #include <waltz_common/parameter.h>
 #include <waltz_common/message.h>
@@ -75,12 +74,8 @@ void Vocal::singSingleNote(const Note& /*aNote*/)
 
 void Vocal::sing(const Score &aScore)
 {
-    qDebug() << Q_FUNC_INFO;
-    if(! mVocalAgent_.isLibraryLoaded())
-    {
-        qDebug() << Q_FUNC_INFO << __LINE__ << "vocal agent is not loaded.";
-        return;
-    }
+    if(! mVocalAgent_.isLibraryLoaded()) return;
+
     mPlayer_.start(aScore.toSoundData());
 }
 

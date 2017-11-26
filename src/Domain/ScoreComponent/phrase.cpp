@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <waltzvocalagent.h>
 #include <length.h>
 #include <QVector>
@@ -89,14 +88,11 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
     {
         FragmentData data = fragmentList.at(index).at(0);
 
-        qDebug() << "data size:" << data.waveformRawDataSize();
-
         SoundDataPointer fragmentSoundData(
                     new SoundData(QSharedPointer<QByteArray>(
                                       new QByteArray(data.waveformRawData(),
                                                      data.waveformRawDataSize())),
                                   soundDataInformation));
-        qDebug() << "data loaded";
 
         NotePointer note = mNotes_.at(index);
         MilliSeconds overlapTime = MilliSeconds(data.preceding().asMilliSeconds());

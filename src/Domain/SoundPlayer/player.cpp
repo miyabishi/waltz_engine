@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QDataStream>
 #include <QThread>
 #include <waltz_common/parameters.h>
@@ -57,7 +56,6 @@ void Player::start(SoundDataPointer aSoundData)
 
 void Player::stateChangedHandler(QAudio::State aNewState)
 {
-    qDebug() << Q_FUNC_INFO << aNewState;
     switch(aNewState)
     {
     case QAudio::IdleState:

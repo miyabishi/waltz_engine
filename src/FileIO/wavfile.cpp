@@ -17,7 +17,6 @@ WavFile::WavFile(const QString& aFilePath)
 
 void WavFile::write(SoundPlayer::SoundDataPointer aSoundData)
 {
-    qDebug() << Q_FUNC_INFO << __LINE__;
     SoundDataInformationPointer sounddataInformation = aSoundData->soundDataInformation();
     QAudioFormat format = sounddataInformation->createAudioFormat();
     QByteArray* rawData = new QByteArray(aSoundData->toByteArray());

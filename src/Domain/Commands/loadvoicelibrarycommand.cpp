@@ -1,4 +1,3 @@
-#include <qDebug>
 #include "loadvoicelibrarycommand.h"
 #include "src/Domain/VocalComponent/vocal.h"
 

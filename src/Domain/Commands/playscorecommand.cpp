@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QJsonObject>
 #include <waltz_common/parameterslist.h>
 #include "playscorecommand.h"
