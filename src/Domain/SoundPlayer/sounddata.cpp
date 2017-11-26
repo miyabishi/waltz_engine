@@ -25,11 +25,8 @@ namespace
                           const int aIndex,
                           const int aLength)
     {
-        return (wavData - aZeroLine) * linearFunction(aIndex,
-                                                      aLength,
-                                                      0,
-                                                      1)
-                + aZeroLine;
+        double position = (double) (aIndex) / aLength;
+        return (wavData - aZeroLine) * (-cos(position * M_PI) + 1) / 2;
     }
 
     double fadeOutFunction(const double wavData,
@@ -37,11 +34,8 @@ namespace
                            const int aIndex,
                            const int aLength)
     {
-        return (wavData - aZeroLine) * linearFunction(aIndex,
-                                                     aLength,
-                                                     1,
-                                                     0)
-               + aZeroLine;
+        double position = (double) (aIndex) / aLength;
+        return (wavData - aZeroLine) * (cos(position * M_PI) + 1) / 2;
     }
 
     void outputToFile(double* array, int length, const QString& aFileName)
@@ -166,7 +160,7 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     updateInformationIfNotInitialized(aSoundData->soundDataInformation());
     int startTimeIndex = mSoundDataInformation_->calculateIndex(aStartTime);
     int overlapArrayLength = mSoundDataInformation_->calculateIndex(aOverlapTime);
-    int fadeLength = 100;
+    int fadeLength = overlapArrayLength;
 
     if (mSoundVector_.length() > (startTimeIndex + overlapArrayLength))
     {
@@ -180,29 +174,25 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
 
     for(int index = 0; index < aSoundData->toVector().length(); ++index)
     {
-/*
-        if (index < overlapArrayLength)
+        if (index < fadeLength)
         {
-            double baseData = fadeOutFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
+//            int currentSoundVectorIndex = mSoundVector_.length() - 1 - index;
+            int currentSoundVectorIndex = mSoundVector_.length() - 1
+                                          - fadeLength + index;
+              double baseData = fadeOutFunction(mSoundVector_.at(currentSoundVectorIndex),
                                               0,
                                               index,
-                                              overlapArrayLength);
+                                              fadeLength);
+
             double appendData = fadeInFunction(aSoundData->toVector().at(index),
                                                0,
                                                index,
-                                               overlapArrayLength);
+                                               fadeLength);
 
-            mSoundVector_[mSoundVector_.length() - 1 - index]
+            mSoundVector_[currentSoundVectorIndex]
                   = baseData + appendData;
             continue;
         }
-        */
-        if (index < overlapArrayLength)
-        {
-            mSoundVector_[mSoundVector_.length() - 1 - index] = aSoundData->toVector().at(index);
-            continue;
-        }
-
         mSoundVector_.append(aSoundData->toVector().at(index));
     }
 }
