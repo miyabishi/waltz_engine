@@ -41,13 +41,14 @@ std::vector<waltz::agent::IAlias*> Phrase::aliases() const
     return mNotes_.aliases().toStdVector();
 }
 
-SoundDataPointer Phrase::toSoundData()
+SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 {
     WaltzVocalAgent* agent = Vocal::getInstance().vocalAgent();
     if (agent == 0 || mNotes_.length() == 0)
     {
         return SoundDataPointer();
     }
+
     FragmentList fragmentList = agent->phraseToFragmentList(this);
     if (fragmentList.length() == 0) return SoundDataPointer();
 
@@ -66,12 +67,12 @@ SoundDataPointer Phrase::toSoundData()
                                                  firstData.waveformRawDataSize())),
                                soundDataInformation));
 
-    PitchCurvePointer pitchCurve = mNotes_.getPitchCurve();
+    //PitchCurvePointer pitchCurve = mNotes_.getPitchCurve();
 
     NotePointer firstNote = mNotes_.at(0);
 
     // TODO WorldParametersCacheId を一意なものにすること
-    soundData->transform(pitchCurve,
+    soundData->transform(aPitchCurve,
                          TimeRange(firstNote->noteStartTime().toMilliSeconds()
                                    .subtract(MilliSeconds(firstData.preceding().asMilliSeconds())),
                                    firstNote->endTime()),
@@ -104,7 +105,7 @@ SoundDataPointer Phrase::toSoundData()
         MilliSeconds soundEndTime = note->endTime();
         MilliSeconds fixedRangeTime = MilliSeconds(data.lengthOfFixedRange().asMilliSeconds());
 
-        fragmentSoundData->transform(pitchCurve,
+        fragmentSoundData->transform(aPitchCurve,
                                      TimeRange(soundStartTime,soundEndTime),
                                      fixedRangeTime,
                                      WorldParametersCacheId(QString::fromStdString(data.phonemes())));
@@ -113,6 +114,7 @@ SoundDataPointer Phrase::toSoundData()
                                            soundStartTime.subtract(mNotes_.startTime()).add(mPrecedingTime_),
                                            overlapTime);
     }
+
     pitchCurve->outputForDebug("pitchCurve_debug.txt");
     return soundData;
 }

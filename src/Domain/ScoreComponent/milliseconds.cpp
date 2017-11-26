@@ -19,6 +19,11 @@ MilliSeconds::MilliSeconds(const MilliSeconds &aOther)
 {
 }
 
+MilliSeconds MilliSeconds::fromSeconds(const double aSeconds)
+{
+    return MilliSeconds(aSeconds * 1000.0);
+}
+
 MilliSeconds& MilliSeconds::operator=(const MilliSeconds &aOther)
 {
     mMilliSeconds_ = aOther.mMilliSeconds_;

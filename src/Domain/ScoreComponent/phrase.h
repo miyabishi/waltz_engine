@@ -9,6 +9,7 @@
 #include "notes.h"
 #include "phraselength.h"
 #include "phrasestarttime.h"
+#include "pitchcurve.h"
 #include "src/Domain/SoundPlayer/sounddata.h"
 
 namespace waltz
@@ -28,7 +29,7 @@ namespace waltz
 
             public:
                 std::vector<waltz::agent::IAlias*> aliases() const;
-                waltz::engine::SoundPlayer::SoundDataPointer toSoundData();
+                waltz::engine::SoundPlayer::SoundDataPointer toSoundData(const PitchCurvePointer aPitchCurve);
                 PhraseStartTime phraseStartTime() const;
                 PhraseLength    phraseLength() const;
                 MilliSeconds    endTime() const;

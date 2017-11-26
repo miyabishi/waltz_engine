@@ -2,6 +2,7 @@
 #define PITCHPOINT_H
 
 #include <QSharedPointer>
+#include <waltz_common/parameters.h>
 #include "milliseconds.h"
 
 namespace waltz
@@ -13,6 +14,7 @@ namespace waltz
             class PitchChangingPoint
             {
             public:
+                explicit PitchChangingPoint(const common::Commands::Parameters& aParameters);
                 PitchChangingPoint(const MilliSeconds& aPosition,
                                    const double& aValue);
             public:

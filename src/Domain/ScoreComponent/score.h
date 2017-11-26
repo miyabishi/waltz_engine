@@ -21,7 +21,6 @@ namespace waltz
             class Score
             {
             public:
-                explicit Score(const Phrases& aPhrases);
                 explicit Score(const common::Commands::Parameters& aParameters);
                 Score(const Score& aOther);
                 Score& operator=(const Score& aOther);
@@ -32,7 +31,7 @@ namespace waltz
                 void loadPitchCurve(const common::Commands::ParametersList& aParameterList);
 
             private:
-                Phrases mPhrases_;
+                Phrases           mPhrases_;
                 PitchCurvePointer mPitchCurve_;
 
             };

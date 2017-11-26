@@ -14,7 +14,8 @@ namespace
 }
 
 Score::Score(const Parameters& aParameters)
-    : mPitchCurve_(new PitchCurve())
+ :  mPhrases_()
+ , mPitchCurve_(new PitchCurve())
 {
     ParametersList noteList(aParameters.find(PARAMETER_NAME_NOTE_LIST).value().toArray());
     ParametersList pitchCurve(aParameters.find(PARAMETER_NAME_PITCH_CURVE).value().toArray());
@@ -24,14 +25,14 @@ Score::Score(const Parameters& aParameters)
 
     loadPhrases(noteList);
     loadPitchCurve(pitchCurve);
-
 }
 
 void Score::loadPitchCurve(const common::Commands::ParametersList &aPitchCurve)
 {
     for(int index = 0; index < aPitchCurve.size(); ++index)
     {
-
+        PitchChangingPointPointer pitchCurve(new PitchChangingPoint(aPitchCurve.at(index)));
+        mPitchCurve_->append(pitchCurve);
     }
 }
 
@@ -53,19 +54,16 @@ void Score::loadPhrases(const common::Commands::ParametersList &aNoteList)
     mPhrases_.apend(PhrasePointer(new Phrase(notes)));
 }
 
-Score::Score(const Phrases& aPhrases)
-    :mPhrases_(aPhrases)
-{
-
-}
 Score::Score(const Score& aOther)
-    :mPhrases_(aOther.mPhrases_)
+    : mPhrases_(aOther.mPhrases_)
+    , mPitchCurve_(aOther.mPitchCurve_)
 {
 }
 
 Score& Score::operator=(const Score& aOther)
 {
     mPhrases_ = aOther.mPhrases_;
+    mPitchCurve_ = aOther.mPitchCurve_;
     return (*this);
 }
 
