@@ -157,6 +157,8 @@ void SoundData::appendData(QSharedPointer<SoundData> aSoundData, const MilliSeco
     }
 }
 
+
+// リファクタ対象
 void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
                                         const MilliSeconds &aStartTime,
                                         const MilliSeconds &aOverlapTime)
@@ -164,6 +166,7 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     updateInformationIfNotInitialized(aSoundData->soundDataInformation());
     int startTimeIndex = mSoundDataInformation_->calculateIndex(aStartTime);
     int overlapArrayLength = mSoundDataInformation_->calculateIndex(aOverlapTime);
+    int fadeLength = 100;
 
     if (mSoundVector_.length() > (startTimeIndex + overlapArrayLength))
     {
@@ -175,12 +178,11 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
         mSoundVector_.append(0);
     }
 
-
     for(int index = 0; index < aSoundData->toVector().length(); ++index)
     {
+/*
         if (index < overlapArrayLength)
         {
-            qDebug() << Q_FUNC_INFO << "run cross fade";
             double baseData = fadeOutFunction(mSoundVector_.at(mSoundVector_.length() - 1 - index),
                                               0,
                                               index,
@@ -194,9 +196,15 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
                   = baseData + appendData;
             continue;
         }
+        */
+        if (index < overlapArrayLength)
+        {
+            mSoundVector_[mSoundVector_.length() - 1 - index] = aSoundData->toVector().at(index);
+            continue;
+        }
+
         mSoundVector_.append(aSoundData->toVector().at(index));
     }
-    qDebug() << Q_FUNC_INFO << "finish cross fade";
 }
 
 void SoundData::updateInformationIfNotInitialized(SoundDataInformationPointer aSoundDataInformation)
