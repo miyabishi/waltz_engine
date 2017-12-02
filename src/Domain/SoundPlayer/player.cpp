@@ -17,6 +17,8 @@ using namespace waltz::engine::SoundPlayer;
 namespace
 {
     const CommandId COMMAND_ID_ACTIVE_PLAY_BUTTON("ActivePlayButton");
+    const CommandId COMMAND_ID_START_SEEK_BAR("StartSeekBar");
+    const CommandId COMMAND_ID_RESET_SEEK_BAR("ResetSeekBar");
 }
 
 Player::Player(QObject* aParent)
@@ -51,6 +53,7 @@ void Player::start(SoundDataPointer aSoundData)
     mAudioOutput_->setBufferSize(16 * 1280);
     connect(mAudioOutput_.data(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(stateChangedHandler(QAudio::State)));
     mAudioOutput_->start(mDataStream_->device());
+    CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_START_SEEK_BAR));
     return;
 }
 
@@ -60,9 +63,11 @@ void Player::stateChangedHandler(QAudio::State aNewState)
     {
     case QAudio::IdleState:
         CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_ACTIVE_PLAY_BUTTON));
+        CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_RESET_SEEK_BAR));
         break;
     case QAudio::StoppedState:
         CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_ACTIVE_PLAY_BUTTON));
+        CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_RESET_SEEK_BAR));
         if (mAudioOutput_->error() == QAudio::NoError) {
             return;
         }
