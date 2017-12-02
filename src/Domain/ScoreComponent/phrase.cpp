@@ -72,6 +72,7 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 
     // TODO WorldParametersCacheId を一意なものにすること
     soundData->transform(aPitchCurve,
+                         firstNote->noteVolume(),
                          TimeRange(firstNote->noteStartTime().toMilliSeconds()
                                    .subtract(MilliSeconds(firstData.preceding().asMilliSeconds())),
                                    firstNote->endTime()),
@@ -102,6 +103,7 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
         MilliSeconds fixedRangeTime = MilliSeconds(data.lengthOfFixedRange().asMilliSeconds());
 
         fragmentSoundData->transform(aPitchCurve,
+                                     note->noteVolume(),
                                      TimeRange(soundStartTime,soundEndTime),
                                      fixedRangeTime,
                                      WorldParametersCacheId(QString::fromStdString(data.phonemes())));

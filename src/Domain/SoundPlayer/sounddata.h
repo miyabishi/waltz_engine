@@ -10,6 +10,7 @@
 #include "src/Domain/ScoreComponent/pitchcurve.h"
 #include "src/Domain/ScoreComponent/milliseconds.h"
 #include "src/Domain/ScoreComponent/timerange.h"
+#include "src/Domain/ScoreComponent/notevolume.h"
 
 namespace waltz
 {
@@ -33,6 +34,7 @@ namespace waltz
                                              const waltz::engine::ScoreComponent::MilliSeconds& aStartTime,
                                              const waltz::engine::ScoreComponent::MilliSeconds& aOverlapTime);
                 void transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
+                               const ScoreComponent::NoteVolumePointer aNoteVolume,
                                const ScoreComponent::TimeRange& aNoteTimeRange,
                                const ScoreComponent::MilliSeconds& FixedRangeLength,
                                const WorldParametersCacheId& aWorldParametersCacheId);

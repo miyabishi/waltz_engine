@@ -9,6 +9,7 @@ namespace
     const QString PARAMETER_NAME_ALIAS("Alias");
     const QString PARAMETER_NAME_NOTE_START_TIME("NoteStartTime");
     const QString PARAMETER_NAME_NOTE_LENGTH("NoteLength");
+    const QString PARAMETER_NAME_NOTE_VOLUME("NoteVolume");
 }
 
 Note::Note(const waltz::common::Commands::Parameters& aParameters)
@@ -17,6 +18,7 @@ Note::Note(const waltz::common::Commands::Parameters& aParameters)
     , mAlias_(* (new Alias(aParameters.find(PARAMETER_NAME_ALIAS).value().toString())))
     , mNoteStartTime_(MilliSeconds(aParameters.find(PARAMETER_NAME_NOTE_START_TIME).value().toDouble()*1000.0))
     , mNoteLength_(MilliSeconds(aParameters.find(PARAMETER_NAME_NOTE_LENGTH).value().toDouble()*1000.0))
+    , mNoteVolume_(NoteVolumePointer(new NoteVolume(aParameters.find(PARAMETER_NAME_NOTE_VOLUME).value().toInt())))
 {
 }
 
@@ -28,7 +30,6 @@ Note::Note(const Tone& aTone,
     , mAlias_(*(new Alias(aAlias)))
     , mNoteStartTime_(aNoteStartTime)
     , mNoteLength_(aNoteLength)
-
 {
 }
 
@@ -37,6 +38,7 @@ Note::Note(const Note& aOther)
     , mAlias_(aOther.mAlias_)
     , mNoteStartTime_(aOther.mNoteStartTime_)
     , mNoteLength_(aOther.mNoteLength_)
+    , mNoteVolume_(aOther.mNoteVolume_)
 {
 
 }
@@ -47,6 +49,7 @@ Note& Note::operator=(const Note& aOther)
     mAlias_ = aOther.mAlias_;
     mNoteStartTime_ = aOther.mNoteStartTime_;
     mNoteLength_ = aOther.mNoteLength_;
+    mNoteVolume_ = aOther.mNoteVolume_;
 
     return (* this);
 }
@@ -63,6 +66,11 @@ Alias* Note::alias() const
 NoteLength Note::noteLength() const
 {
     return mNoteLength_;
+}
+
+NoteVolumePointer Note::noteVolume() const
+{
+    return mNoteVolume_;
 }
 
 NoteStartTime Note::noteStartTime() const

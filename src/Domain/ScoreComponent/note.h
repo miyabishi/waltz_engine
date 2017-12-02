@@ -8,6 +8,7 @@
 #include "notestarttime.h"
 #include "notelength.h"
 #include "timerange.h"
+#include "notevolume.h"
 
 namespace waltz
 {
@@ -32,17 +33,20 @@ namespace waltz
                 Alias* alias() const;
                 NoteLength noteLength() const;
                 NoteStartTime noteStartTime() const;
+                NoteVolumePointer noteVolume() const;
                 MilliSeconds endTime() const;
                 TimeRange noteTimeRange() const;
+
 
                 void moveToTop();
                 Tone tone() const;
 
             private:
-                Tone          mTone_;
-                Alias&        mAlias_;
-                NoteStartTime mNoteStartTime_;
-                NoteLength    mNoteLength_;
+                Tone              mTone_;
+                Alias&            mAlias_;
+                NoteStartTime     mNoteStartTime_;
+                NoteLength        mNoteLength_;
+                NoteVolumePointer mNoteVolume_;
             };
             typedef QSharedPointer<Note> NotePointer;
 

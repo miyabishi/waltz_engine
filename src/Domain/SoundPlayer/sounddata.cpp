@@ -1,4 +1,5 @@
 #include <memory>
+#include <QTextStream>
 #include <QDataStream>
 #include <QBuffer>
 #include "worldparametersrepository.h"
@@ -210,9 +211,10 @@ SoundDataInformationPointer SoundData::soundDataInformation() const
     return mSoundDataInformation_;
 }
 
-void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
-                          const ScoreComponent::TimeRange& aNoteTimeRange,
-                          const ScoreComponent::MilliSeconds& aFixedRangeLength,
+void SoundData::transform(const PitchCurvePointer aPitchCurve,
+                          const NoteVolumePointer aNoteVolume,
+                          const TimeRange& aNoteTimeRange,
+                          const MilliSeconds& aFixedRangeLength,
                           const WorldParametersCacheId& aWorldParametersCacheId)
 {
     WorldParameters worldParameters = {0};
@@ -313,7 +315,7 @@ void SoundData::transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
     mSoundVector_.clear();
     for (int index = 0; index < outputLength; ++index)
     {
-        mSoundVector_.append(output[index]);
+        mSoundVector_.append(aNoteVolume->calculateSoundValue((output[index])));
     }
 
     Synthesizer::getInstance().DestroyMemory(&worldParameters);
