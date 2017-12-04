@@ -1,7 +1,9 @@
+#include <QtMath>
 #include <QTextStream>
 #include "pitchcurve.h"
 
 using namespace waltz::engine::ScoreComponent;
+
 
 namespace
 {
@@ -9,6 +11,16 @@ namespace
                                     const PitchChangingPointPointer& b)
     {
         return a->position().value() < b->position().value();
+    }
+
+    double interpolation(double aX, double aPreX, double aPreY, double aPostX, double aPostY)
+    {
+        if (aPreY == aPostY)
+        {
+            return aPreY;
+        }
+        double t = (aX - aPreX)/(aPostX - aPreX);
+        return aPreY + cos(t * M_PI) * (aPostY - aPreY);
     }
 }
 
@@ -39,10 +51,15 @@ double PitchCurve::calculateValue(const MilliSeconds& aPosition)
         if (pre->position().value() < aPosition.value() &&
             aPosition.value() <= post->position().value())
         {
+            /*
             return ((post->value() - pre->value())/
                     (post->position().value() - pre->position().value()))
                     * (aPosition.value() - pre->position().value())
                     + pre->value();
+                    */
+            return interpolation(aPosition.value(),
+                                 pre->position().value(), pre->value(),
+                                 post->position().value(), post->value());
         }
     }
     return mPitchCurve_.last()->value();

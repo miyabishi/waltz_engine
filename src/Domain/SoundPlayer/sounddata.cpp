@@ -2,6 +2,7 @@
 #include <QTextStream>
 #include <QDataStream>
 #include <QBuffer>
+#include <qmath.h>
 #include "worldparametersrepository.h"
 #include "sounddata.h"
 
@@ -51,6 +52,16 @@ namespace
         }
         file.close();
 
+    }
+
+    double noizeGate(double aValue, double aThreshold)
+    {
+        double abs = qAbs(aValue);
+        if (abs < aThreshold)
+        {
+            return aValue * (abs / aThreshold);
+        }
+        return aValue;
     }
 }
 
@@ -151,7 +162,6 @@ void SoundData::appendData(QSharedPointer<SoundData> aSoundData, const MilliSeco
     }
 }
 
-
 // リファクタ対象
 void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
                                         const MilliSeconds &aStartTime,
@@ -176,10 +186,9 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     {
         if (index < fadeLength)
         {
-//            int currentSoundVectorIndex = mSoundVector_.length() - 1 - index;
             int currentSoundVectorIndex = mSoundVector_.length() - 1
                                           - fadeLength + index;
-              double baseData = fadeOutFunction(mSoundVector_.at(currentSoundVectorIndex),
+            double baseData = fadeOutFunction(mSoundVector_.at(currentSoundVectorIndex),
                                               0,
                                               index,
                                               fadeLength);
@@ -225,7 +234,7 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
 
     for (int index = 0; index < inputLengh; ++ index)
     {
-        input[index] = mSoundVector_.at(index);
+        input[index] = noizeGate(mSoundVector_.at(index), 0.05);
     }
 
     // WORLパラメータの作成

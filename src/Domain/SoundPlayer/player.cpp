@@ -66,7 +66,7 @@ void Player::stateChangedHandler(QAudio::State aNewState)
         CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_RESET_SEEK_BAR));
         break;
     case QAudio::StoppedState:
-        CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_ACTIVE_PLAY_BUTTON));
+            CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_ACTIVE_PLAY_BUTTON));
         CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_RESET_SEEK_BAR));
         if (mAudioOutput_->error() == QAudio::NoError) {
             return;
