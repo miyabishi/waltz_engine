@@ -52,13 +52,6 @@ double PitchCurve::calculateValue(const MilliSeconds& aPosition)
         if (pre->position().value() < aPosition.value() &&
             aPosition.value() <= post->position().value())
         {
-            /*
-            return ((post->value() - pre->value())/
-                    (post->position().value() - pre->position().value()))
-                    * (aPosition.value() - pre->position().value())
-                    + pre->value();
-                    */
-            // 動作未確認
             return interpolation(aPosition.value(),
                                  pre->position().value(), pre->value(),
                                  post->position().value(), post->value());
