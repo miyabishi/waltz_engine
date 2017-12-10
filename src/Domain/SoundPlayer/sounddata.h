@@ -48,6 +48,8 @@ namespace waltz
                 void updateInformationIfNotInitialized(SoundDataInformationPointer aSoundDataInformation);
                 void initializeWavDataByByteArray();
                 int16_t roudedSoundValue(int aIndex) const;
+                void shrinkSoundVectorIfLongerThan(int aLength);
+                void extendSoundVectorIfShorterThan(int aLength);
 
             private:
                 QVector<double>             mSoundVector_;
