@@ -9,6 +9,7 @@
 #include "notelength.h"
 #include "timerange.h"
 #include "notevolume.h"
+#include "vibrato.h"
 
 namespace waltz
 {
@@ -25,8 +26,6 @@ namespace waltz
                      const Alias& aAlias,
                      const NoteStartTime& aNoteStartTime,
                      const NoteLength& aNoteLength);
-                Note(const Note& aOther);
-                Note& operator=(const Note& aOther);
                 ~Note();
 
             public:
@@ -47,6 +46,11 @@ namespace waltz
                 NoteStartTime     mNoteStartTime_;
                 NoteLength        mNoteLength_;
                 NoteVolumePointer mNoteVolume_;
+                VibratoPointer    mVibrato_;
+
+            private:
+                Note(const Note& aOther);
+                Note& operator=(const Note& aOther);
             };
             typedef QSharedPointer<Note> NotePointer;
 

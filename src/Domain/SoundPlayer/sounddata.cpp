@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <memory>
 #include <QTextStream>
 #include <QDataStream>
@@ -203,6 +204,7 @@ void SoundData::shrinkSoundVectorIfLongerThan(int aLength)
 {
     if (mSoundVector_.length() > aLength)
     {
+        qDebug() << Q_FUNC_INFO << "SHRINK!";
         mSoundVector_ = mSoundVector_.mid(0, aLength);
     }
 }
@@ -211,6 +213,7 @@ void SoundData::extendSoundVectorIfShorterThan(int aLength)
 {
     while (mSoundVector_.length() < aLength)
     {
+        qDebug() << Q_FUNC_INFO << "EXTEND!";
         mSoundVector_.append(0);
     }
 }
@@ -246,7 +249,7 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
         input[index] = noizeGate(mSoundVector_.at(index), 0.05);
     }
 
-    // WORLパラメータの作成
+    // WORLDパラメータの作成
     if(WorldParametersRepository::getInstance().hasWorldParammeters(aWorldParametersCacheId))
     {
         WorldParametersRepository::getInstance().loadWorldParameters(aWorldParametersCacheId,

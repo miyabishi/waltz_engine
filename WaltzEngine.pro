@@ -74,7 +74,11 @@ SOURCES += main.cpp \
     src/Domain/SoundPlayer/worldparameterscacheid.cpp \
     src/FileIO/wavfile.cpp \
     src/Domain/Commands/savewavcommand.cpp \
-    src/Domain/ScoreComponent/notevolume.cpp
+    src/Domain/ScoreComponent/notevolume.cpp \
+    src/Domain/ScoreComponent/vibrato.cpp \
+    src/Domain/ScoreComponent/vibratoamplitude.cpp \
+    src/Domain/ScoreComponent/vibratolength.cpp \
+    src/Domain/ScoreComponent/vibratowavelength.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -131,7 +135,11 @@ HEADERS  += \
     src/Domain/SoundPlayer/worldparameterscacheid.h \
     src/FileIO/wavfile.h \
     src/Domain/Commands/savewavcommand.h \
-    src/Domain/ScoreComponent/notevolume.h
+    src/Domain/ScoreComponent/notevolume.h \
+    src/Domain/ScoreComponent/vibrato.h \
+    src/Domain/ScoreComponent/vibratoamplitude.h \
+    src/Domain/ScoreComponent/vibratolength.h \
+    src/Domain/ScoreComponent/vibratowavelength.h
 
 RESOURCES += \
     resource/waltzengine.qrc

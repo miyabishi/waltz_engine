@@ -10,15 +10,25 @@ namespace
     const QString PARAMETER_NAME_NOTE_START_TIME("NoteStartTime");
     const QString PARAMETER_NAME_NOTE_LENGTH("NoteLength");
     const QString PARAMETER_NAME_NOTE_VOLUME("NoteVolume");
+    const QString PARAMETER_NAME_VIBRATO_LENGTH("VibratoLength");
+    const QString PARAMETER_NAME_VIBRATO_WAVELENGTH("VibratoWavelength");
+    const QString PARAMETER_NAME_VIBRATO_AMPLITUDE("VibratoAmplitude");
 }
 
 Note::Note(const waltz::common::Commands::Parameters& aParameters)
     : mTone_((ToneValue)aParameters.find(PARAMETER_NAME_TONE_VALUE).value().toInt(),
                aParameters.find(PARAMETER_NAME_TONE_OCTAVE).value().toInt())
     , mAlias_(* (new Alias(aParameters.find(PARAMETER_NAME_ALIAS).value().toString())))
-    , mNoteStartTime_(MilliSeconds(aParameters.find(PARAMETER_NAME_NOTE_START_TIME).value().toDouble()*1000.0))
-    , mNoteLength_(MilliSeconds(aParameters.find(PARAMETER_NAME_NOTE_LENGTH).value().toDouble()*1000.0))
+    , mNoteStartTime_(MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_NOTE_START_TIME).value().toDouble()))
+    , mNoteLength_(MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_NOTE_LENGTH).value().toDouble()))
     , mNoteVolume_(NoteVolumePointer(new NoteVolume(aParameters.find(PARAMETER_NAME_NOTE_VOLUME).value().toInt())))
+    , mVibrato_(VibratoPointer(new Vibrato(
+                                   VibratoLengthPointer(new VibratoLength(
+                                                            MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_VIBRATO_LENGTH).value().toDouble()))),
+                                   VibratoWavelengthPointer(new VibratoWavelength(
+                                                            MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_VIBRATO_WAVELENGTH).value().toDouble()))),
+                                   VibratoAmplitudePointer(new VibratoAmplitude(
+                                                            aParameters.find(PARAMETER_NAME_VIBRATO_AMPLITUDE).value().toDouble())))))
 {
 }
 
@@ -31,27 +41,6 @@ Note::Note(const Tone& aTone,
     , mNoteStartTime_(aNoteStartTime)
     , mNoteLength_(aNoteLength)
 {
-}
-
-Note::Note(const Note& aOther)
-    : mTone_(aOther.mTone_)
-    , mAlias_(aOther.mAlias_)
-    , mNoteStartTime_(aOther.mNoteStartTime_)
-    , mNoteLength_(aOther.mNoteLength_)
-    , mNoteVolume_(aOther.mNoteVolume_)
-{
-
-}
-
-Note& Note::operator=(const Note& aOther)
-{
-    mTone_ = aOther.mTone_;
-    mAlias_ = aOther.mAlias_;
-    mNoteStartTime_ = aOther.mNoteStartTime_;
-    mNoteLength_ = aOther.mNoteLength_;
-    mNoteVolume_ = aOther.mNoteVolume_;
-
-    return (* this);
 }
 
 Note::~Note()
