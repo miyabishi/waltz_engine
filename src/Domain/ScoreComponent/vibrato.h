@@ -19,6 +19,9 @@ namespace waltz
                 Vibrato(VibratoLengthPointer aLength,
                         VibratoWavelengthPointer aWavelength,
                         VibratoAmplitudePointer aAmplitude);
+            public:
+                double calculatePitch(double aValue, MilliSeconds aPosition);
+
             private:
                 VibratoLengthPointer mLength_;
                 VibratoWavelengthPointer mWavelength_;

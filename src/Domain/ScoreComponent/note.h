@@ -35,6 +35,7 @@ namespace waltz
                 NoteVolumePointer noteVolume() const;
                 MilliSeconds endTime() const;
                 TimeRange noteTimeRange() const;
+                VibratoPointer vibrato() const;
 
 
                 void moveToTop();

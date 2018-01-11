@@ -234,6 +234,7 @@ SoundDataInformationPointer SoundData::soundDataInformation() const
 
 void SoundData::transform(const PitchCurvePointer aPitchCurve,
                           const NoteVolumePointer aNoteVolume,
+                          const VibratoPointer aVibrato,
                           const TimeRange& aNoteTimeRange,
                           const MilliSeconds& aFixedRangeLength,
                           const WorldParametersCacheId& aWorldParametersCacheId)
@@ -305,7 +306,8 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
         MilliSeconds pos = MilliSeconds(
                     (aNoteTimeRange.length().value() / outputWorldParameters.lengthOfF0)* timeIndex)
                     .add(aNoteTimeRange.startTime());
-        outputWorldParameters.f0[timeIndex] = aPitchCurve->calculateValue(pos);
+        outputWorldParameters.f0[timeIndex] =
+                aVibrato->calculatePitch(aPitchCurve->calculateValue(pos), pos);
 
         int sourceTimeIndex = 0;
         // fixed range

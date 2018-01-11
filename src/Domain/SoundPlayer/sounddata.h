@@ -11,6 +11,7 @@
 #include "src/Domain/ScoreComponent/milliseconds.h"
 #include "src/Domain/ScoreComponent/timerange.h"
 #include "src/Domain/ScoreComponent/notevolume.h"
+#include "src/Domain/ScoreComponent/vibrato.h"
 
 namespace waltz
 {
@@ -35,6 +36,7 @@ namespace waltz
                                              const waltz::engine::ScoreComponent::MilliSeconds& aOverlapTime);
                 void transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
                                const ScoreComponent::NoteVolumePointer aNoteVolume,
+                               const ScoreComponent::VibratoPointer aVibratoPointer,
                                const ScoreComponent::TimeRange& aNoteTimeRange,
                                const ScoreComponent::MilliSeconds& FixedRangeLength,
                                const WorldParametersCacheId& aWorldParametersCacheId);

@@ -11,3 +11,8 @@ Vibrato::Vibrato(VibratoLengthPointer aLength,
 {
 }
 
+
+double Vibrato::calculatePitch(double aValue, MilliSeconds aPosition)
+{
+    return aValue;
+}

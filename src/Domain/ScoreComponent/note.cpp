@@ -57,6 +57,12 @@ NoteLength Note::noteLength() const
     return mNoteLength_;
 }
 
+VibratoPointer Note::vibrato() const
+{
+    return mVibrato_;
+}
+
+
 NoteVolumePointer Note::noteVolume() const
 {
     return mNoteVolume_;
