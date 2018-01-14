@@ -15,7 +15,6 @@ namespace waltz
             class Vibrato
             {
             public:
-                // length wavelength amplitude
                 Vibrato(VibratoLengthPointer aLength,
                         VibratoWavelengthPointer aWavelength,
                         VibratoAmplitudePointer aAmplitude);
