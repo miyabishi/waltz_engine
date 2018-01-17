@@ -14,6 +14,7 @@ namespace waltz
             {
             public:
                 explicit VibratoWavelength(const MilliSeconds aMilliSeconds);
+                MilliSeconds divide(const MilliSeconds aValue) const;
 
             private:
                 MilliSeconds mMilliSeconds_;

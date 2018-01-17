@@ -23,6 +23,11 @@ Note::Note(const waltz::common::Commands::Parameters& aParameters)
     , mNoteLength_(MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_NOTE_LENGTH).value().toDouble()))
     , mNoteVolume_(NoteVolumePointer(new NoteVolume(aParameters.find(PARAMETER_NAME_NOTE_VOLUME).value().toInt())))
     , mVibrato_(VibratoPointer(new Vibrato(
+                                   VibratoStartTimePointer(new VibratoStartTime(
+                                       MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_NOTE_START_TIME).value().toDouble())
+                                       .add(MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_NOTE_LENGTH).value().toDouble()))
+                                       .subtract(MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_VIBRATO_LENGTH).value().toDouble())))
+                                       ),
                                    VibratoLengthPointer(new VibratoLength(
                                                             MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_VIBRATO_LENGTH).value().toDouble()))),
                                    VibratoWavelengthPointer(new VibratoWavelength(
@@ -61,7 +66,6 @@ VibratoPointer Note::vibrato() const
 {
     return mVibrato_;
 }
-
 
 NoteVolumePointer Note::noteVolume() const
 {

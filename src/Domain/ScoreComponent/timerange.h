@@ -18,6 +18,7 @@ namespace waltz
                 MilliSeconds startTime() const;
                 MilliSeconds endTime() const;
                 MilliSeconds length() const;
+                bool within(const MilliSeconds& aPosition) const;
 
             private:
                 MilliSeconds mStartTime_;

@@ -14,6 +14,7 @@ namespace waltz
             {
             public:
                 explicit VibratoLength(const MilliSeconds aMilliSeconds);
+                MilliSeconds value() const;
 
             private:
                 MilliSeconds mValue_;

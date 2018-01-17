@@ -64,3 +64,8 @@ MilliSeconds MilliSeconds::subtract(const MilliSeconds &aOther) const
 {
     return MilliSeconds(value() - aOther.value());
 }
+
+MilliSeconds MilliSeconds::dividedBy(const MilliSeconds& aValue) const
+{
+    return MilliSeconds(value() / aValue.value());
+}

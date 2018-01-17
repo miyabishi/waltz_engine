@@ -23,3 +23,8 @@ MilliSeconds TimeRange::length() const
 {
     return mEndTime_.subtract(mStartTime_);
 }
+
+bool TimeRange::within(const MilliSeconds& aPosition) const
+{
+    return (startTime().value() < aPosition.value() && aPosition.value() < endTime().value());
+}

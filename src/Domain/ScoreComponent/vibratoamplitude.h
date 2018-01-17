@@ -13,6 +13,7 @@ namespace waltz
             {
             public:
                 explicit VibratoAmplitude(const double aValue);
+                double multipliedBy(double aValue);
 
             private:
                 double mValue_;

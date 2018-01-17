@@ -5,6 +5,7 @@
 #include "vibratolength.h"
 #include "vibratoamplitude.h"
 #include "vibratowavelength.h"
+#include "vibratostarttime.h"
 
 namespace waltz
 {
@@ -15,16 +16,18 @@ namespace waltz
             class Vibrato
             {
             public:
-                Vibrato(VibratoLengthPointer aLength,
+                Vibrato(VibratoStartTimePointer aStartTime,
+                        VibratoLengthPointer aLength,
                         VibratoWavelengthPointer aWavelength,
                         VibratoAmplitudePointer aAmplitude);
             public:
-                double calculatePitch(double aValue, MilliSeconds aPosition);
+                double calculatePitch(double aValue, const MilliSeconds& aPosition);
 
             private:
-                VibratoLengthPointer mLength_;
+                VibratoStartTimePointer  mStartTime_;
+                VibratoLengthPointer     mLength_;
                 VibratoWavelengthPointer mWavelength_;
-                VibratoAmplitudePointer mAmplitude_;
+                VibratoAmplitudePointer  mAmplitude_;
 
             private:
                 Vibrato(const Vibrato& aOther);

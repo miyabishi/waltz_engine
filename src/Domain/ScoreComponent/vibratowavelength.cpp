@@ -8,3 +8,9 @@ VibratoWavelength::VibratoWavelength(const MilliSeconds aMilliSeconds)
 
 }
 
+MilliSeconds VibratoWavelength::divide(const MilliSeconds aValue) const
+{
+    return aValue.dividedBy(mMilliSeconds_);
+}
+
+
