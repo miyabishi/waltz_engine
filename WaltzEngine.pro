@@ -79,7 +79,8 @@ SOURCES += main.cpp \
     src/Domain/ScoreComponent/vibratoamplitude.cpp \
     src/Domain/ScoreComponent/vibratolength.cpp \
     src/Domain/ScoreComponent/vibratowavelength.cpp \
-    src/Domain/ScoreComponent/vibratostarttime.cpp
+    src/Domain/ScoreComponent/vibratostarttime.cpp \
+    src/Domain/Commands/stopcommand.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -141,7 +142,8 @@ HEADERS  += \
     src/Domain/ScoreComponent/vibratoamplitude.h \
     src/Domain/ScoreComponent/vibratolength.h \
     src/Domain/ScoreComponent/vibratowavelength.h \
-    src/Domain/ScoreComponent/vibratostarttime.h
+    src/Domain/ScoreComponent/vibratostarttime.h \
+    src/Domain/Commands/stopcommand.h
 
 RESOURCES += \
     resource/waltzengine.qrc
