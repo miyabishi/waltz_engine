@@ -57,6 +57,11 @@ void Player::start(SoundDataPointer aSoundData)
     return;
 }
 
+void Player::stop()
+{
+    mAudioOutput_->stop();
+}
+
 void Player::stateChangedHandler(QAudio::State aNewState)
 {
     switch(aNewState)

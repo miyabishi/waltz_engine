@@ -1,6 +1,9 @@
 #ifndef STOPCOMMAND_H
 #define STOPCOMMAND_H
 
+#include <waltz_common/command.h>
+#include <waltz_common/parameters.h>
+
 namespace waltz
 {
     namespace engine
@@ -8,10 +11,13 @@ namespace waltz
         namespace Commands
         {
 
-            class StopCommand
+            class StopCommand : common::Commands::Command
             {
             public:
                 StopCommand();
+            public:
+                void exec(
+                        const waltz::common::Commands::Parameters &aParameters);
             };
 
         } // namespace Commands

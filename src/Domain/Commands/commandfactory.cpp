@@ -3,6 +3,7 @@
 #include "playnotecommand.h"
 #include "playscorecommand.h"
 #include "savewavcommand.h"
+#include "stopcommand.h"
 
 using namespace waltz::engine::Commands;
 using namespace waltz::common::Commands;
@@ -10,30 +11,26 @@ using namespace waltz::common::Commands;
 
 CommandPointer CommandFactory::createCommand(const CommandId& aCommandId)
 {
-    if(aCommandId == CommandId("LoadVoiceLibrary"))
+    foreach(CommandPointer command,  mCommandList_)
     {
-        return CommandPointer(
-                    new LoadVoiceLibraryCommand());
+        if(! command->commandIdEquals(aCommandId)) continue;
+        return command;
     }
-    if(aCommandId == CommandId("PlayNote"))
-    {
-        return CommandPointer(
-                    new PlayNoteCommand());
-    }
-    if(aCommandId == CommandId("PlayScore"))
-    {
-        return CommandPointer(
-                    new PlayScoreCommand());
-    }
-    if(aCommandId == CommandId("SaveWav"))
-    {
-        return CommandPointer(
-                    new SaveWavCommand());
-    }
+
 
     return CommandPointer();
 }
 
 CommandFactory::CommandFactory()
 {
+    mCommandList_.append(CommandPointer(
+                             new LoadVoiceLibraryCommand()));
+    mCommandList_.append(CommandPointer(
+                             new PlayNoteCommand()));
+    mCommandList_.append(CommandPointer(
+                             new PlayScoreCommand()));
+    mCommandList_.append(CommandPointer(
+                             new SaveWavCommand());
+    mCommandList_.append(CommandPointer(
+                             new StopCommand());
 }

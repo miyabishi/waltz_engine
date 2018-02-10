@@ -3,6 +3,7 @@
 
 #include <waltz_common/command.h>
 #include <waltz_common/commandid.h>
+#include <QList>
 
 namespace waltz
 {
@@ -17,6 +18,9 @@ namespace waltz
                         const waltz::common::Commands::CommandId& aCommandId);
             private:
                 CommandFactory();
+                QList<common::Commands::CommandPointer> mCommandList_;
+
+
             };
 
         } // namespace Commands

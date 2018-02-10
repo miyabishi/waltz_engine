@@ -24,6 +24,7 @@ namespace waltz
                 void singSingleNote(
                         const waltz::engine::ScoreComponent::Note& aNote);
                 void sing(const waltz::engine::ScoreComponent::Score& aScore);
+                void stopSinging();
                 waltz::agent::WaltzVocalAgent* vocalAgent();
 
             private:

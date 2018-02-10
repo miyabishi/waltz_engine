@@ -24,6 +24,7 @@ namespace waltz
 
             public:
                 void start(SoundDataPointer aSoundData);
+                void stop();
 
             private slots:
                 void stateChangedHandler(QAudio::State);

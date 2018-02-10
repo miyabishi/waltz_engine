@@ -79,6 +79,11 @@ void Vocal::sing(const Score &aScore)
     mPlayer_.start(aScore.toSoundData());
 }
 
+void Vocal::stopSinging()
+{
+
+}
+
 waltz::agent::WaltzVocalAgent* Vocal::vocalAgent()
 {
     return &mVocalAgent_;
