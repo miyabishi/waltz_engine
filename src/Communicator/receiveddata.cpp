@@ -63,7 +63,7 @@ void ReceivedData::parseReceivedData(const QByteArray &aReceivedData)
 
 void ReceivedData::executeCommand()
 {
-    CommandPointer command = CommandFactory::createCommand(mCommandId_);
+    CommandPointer command = CommandFactory::getInstance().createCommand(mCommandId_);
     if (command == 0)
     {
         return;

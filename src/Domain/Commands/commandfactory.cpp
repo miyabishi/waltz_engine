@@ -9,14 +9,25 @@ using namespace waltz::engine::Commands;
 using namespace waltz::common::Commands;
 
 
+CommandFactory* CommandFactory::mInstance_ = 0;
+
+CommandFactory& CommandFactory::getInstance()
+{
+    if (0 == mInstance_)
+    {
+        static CommandFactory instance;
+        mInstance_ = &instance;
+    }
+    return *mInstance_;
+}
+
 CommandPointer CommandFactory::createCommand(const CommandId& aCommandId)
 {
-    foreach(CommandPointer command,  mCommandList_)
+    foreach(const CommandPointer command,  mCommandList_)
     {
         if(! command->commandIdEquals(aCommandId)) continue;
         return command;
     }
-
 
     return CommandPointer();
 }
@@ -30,7 +41,7 @@ CommandFactory::CommandFactory()
     mCommandList_.append(CommandPointer(
                              new PlayScoreCommand()));
     mCommandList_.append(CommandPointer(
-                             new SaveWavCommand());
+                             new SaveWavCommand()));
     mCommandList_.append(CommandPointer(
-                             new StopCommand());
+                             new StopCommand()));
 }

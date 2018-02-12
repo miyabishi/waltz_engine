@@ -11,7 +11,7 @@ namespace waltz
         namespace Commands
         {
 
-            class StopCommand : common::Commands::Command
+            class StopCommand : public common::Commands::Command
             {
             public:
                 StopCommand();
