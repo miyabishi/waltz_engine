@@ -11,7 +11,7 @@ namespace
 }
 
 StopCommand::StopCommand()
- :Command(CommandId(COMMAND_ID_STOP))
+ :Command(COMMAND_ID_STOP)
 {
 
 }
