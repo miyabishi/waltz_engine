@@ -1,4 +1,5 @@
-#include<waltz_common/commandid.h>
+#include <QDebug>
+#include <waltz_common/commandid.h>
 #include "stopcommand.h"
 #include "src/Domain/VocalComponent/vocal.h"
 
@@ -18,5 +19,6 @@ StopCommand::StopCommand()
 void StopCommand::exec(
         const waltz::common::Commands::Parameters& /*aParameters*/)
 {
+    qDebug() << "Stop";
     waltz::engine::VocalComponent::Vocal::getInstance().stopSinging();
 }
