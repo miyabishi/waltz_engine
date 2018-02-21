@@ -27,5 +27,5 @@ void PlayScoreCommand::exec(const Parameters &aParameters)
             MilliSeconds::fromSeconds(aParameters.find(PARAMETER_PLAY_BACK_STARTING_TIME).value().toDouble());
 
     waltz::engine::ScoreComponent::Score score(aParameters);
-    Vocal::getInstance().sing(score);
+    Vocal::getInstance().sing(score, playBackStartingTime);
 }
