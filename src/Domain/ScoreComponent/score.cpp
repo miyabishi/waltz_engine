@@ -10,12 +10,15 @@ namespace
 {
     const QString PARAMETER_NAME_NOTE_LIST("NoteList");
     const QString PARAMETER_NAME_PITCH_CURVE("PitchCurve");
+    const QString PARAMETER_NAME_PLAY_BACK_STARTING_TIME("PlayBackStartingTime");
+
 }
 
 Score::Score(const Parameters& aParameters)
  :  mPhrases_()
  , mPitchCurve_(new PitchCurve())
 {
+    //TODO: ここでplaybackstartinttimeを考慮すること
     ParametersList noteList(aParameters.find(PARAMETER_NAME_NOTE_LIST).value().toArray());
     ParametersList pitchCurve(aParameters.find(PARAMETER_NAME_PITCH_CURVE).value().toArray());
 
