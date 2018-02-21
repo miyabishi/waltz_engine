@@ -72,7 +72,7 @@ void Vocal::singSingleNote(const Note& /*aNote*/)
     */
 }
 
-void Vocal::sing(const Score &aScore)
+void Vocal::sing(const Score &aScore, const MilliSeconds aPlayBackStartingTime)
 {
     if(! mVocalAgent_.isLibraryLoaded()) return;
 
