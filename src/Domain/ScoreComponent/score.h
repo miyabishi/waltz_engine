@@ -30,7 +30,8 @@ namespace waltz
                 void clear();
 
             private:
-                void loadPhrases(const common::Commands::ParametersList& aParameterList);
+                void loadPhrases(const common::Commands::ParametersList& aParameterList,
+                                 const MilliSeconds aPlaybackStartingTime);
                 void loadPitchCurve(const common::Commands::ParametersList& aParameterList);
 
             private:

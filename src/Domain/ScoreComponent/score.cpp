@@ -21,11 +21,14 @@ Score::Score(const Parameters& aParameters)
     //TODO: ここでplaybackstartinttimeを考慮すること
     ParametersList noteList(aParameters.find(PARAMETER_NAME_NOTE_LIST).value().toArray());
     ParametersList pitchCurve(aParameters.find(PARAMETER_NAME_PITCH_CURVE).value().toArray());
+    MilliSeconds playbackStartingTime
+            = MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_PLAY_BACK_STARTING_TIME)
+                                        .value().toDouble());
 
     if (pitchCurve.size() == 0) return;
     if (noteList.size() == 0) return;
 
-    loadPhrases(noteList);
+    loadPhrases(noteList, playbackStartingTime);
     loadPitchCurve(pitchCurve);
 }
 
@@ -43,12 +46,32 @@ void Score::loadPitchCurve(const common::Commands::ParametersList &aPitchCurve)
     }
 }
 
-void Score::loadPhrases(const common::Commands::ParametersList &aNoteList)
+void Score::loadPhrases(const common::Commands::ParametersList &aNoteList,
+                        const MilliSeconds aPlaybackStartingTime)
 {
-    Notes notes;
-    notes.append(NotePointer(new Note(aNoteList.at(0))));
+    // TODO: 要リファクタ 複数の処理
 
-    for(int index = 1; index < aNoteList.size(); ++index)
+    Notes notes;
+    int startIndex = 0;
+
+    for(int index = 0; index < aNoteList.size(); ++index)
+    {
+        NotePointer note(NotePointer(new Note(aNoteList.at(index))));
+
+        if (note->noteStartTime().toMilliSeconds().value() <
+                aPlaybackStartingTime.value())
+        {
+            continue;
+        }
+
+        startIndex=index;
+        break;
+    }
+
+
+    notes.append(NotePointer(new Note(aNoteList.at(startIndex))));
+
+    for(int index = startIndex + 1; index < aNoteList.size(); ++index)
     {
         NotePointer note(new Note(aNoteList.at(index)));
         if(notes.endTime().value() != note->noteStartTime().toMilliSeconds().value())
