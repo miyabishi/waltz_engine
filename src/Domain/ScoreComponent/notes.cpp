@@ -70,47 +70,6 @@ int Notes::length() const
     return mNotes_.length();
 }
 
-PitchCurvePointer Notes::getPitchCurve() const
-{
-    if(mNotes_.length() == 0)
-    {
-        return PitchCurvePointer();
-    }
-
-    PitchCurvePointer pitchCurve(new PitchCurve());
-
-    NotePointer firstNote = mNotes_.at(0);
-    pitchCurve->append(PitchChangingPointPointer(
-                                   new PitchChangingPoint(firstNote->noteStartTime().toMilliSeconds(),
-                                                          firstNote->tone().frequency())));
-
-    for(int index = 1; index < mNotes_.length(); ++index)
-    {
-        double preNoteFrequency = mNotes_.at(index -1 )->tone().frequency();
-        NotePointer currentNote = mNotes_.at(index);
-
-        double currentNoteFrequency = currentNote->tone().frequency();
-        int portamentoLength = 200;
-        double currentTime = currentNote->noteStartTime().toMilliSeconds().value() - portamentoLength;
-
-        for(int pitchCurveIndex = 0; pitchCurveIndex < portamentoLength; ++ pitchCurveIndex)
-        {
-            double currentFrequency = preNoteFrequency +
-                    (currentNoteFrequency - preNoteFrequency) * sigmoid((double)(2 * pitchCurveIndex)/portamentoLength - 1.0, 5.0);
-
-            pitchCurve->append(PitchChangingPointPointer(
-                                           new PitchChangingPoint(MilliSeconds(currentTime),
-                                                                  currentFrequency)));
-
-            ++currentTime;
-        }
-
-        pitchCurve->append(PitchChangingPointPointer(
-                                       new PitchChangingPoint(currentNote->noteStartTime().toMilliSeconds(),
-                                                              currentNoteFrequency)));
-    }
-    return pitchCurve;
-}
 NotePointer Notes::at(int index) const
 {
     return mNotes_.at(index);

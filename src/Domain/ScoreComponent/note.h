@@ -21,7 +21,8 @@ namespace waltz
             class Note
             {
             public:
-                explicit Note(const waltz::common::Commands::Parameters& aParameters);
+                Note(const waltz::common::Commands::Parameters& aParameters,
+                              const MilliSeconds& aOffset);
                 Note(const Tone& aTone,
                      const Alias& aAlias,
                      const NoteStartTime& aNoteStartTime,

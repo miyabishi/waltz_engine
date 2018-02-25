@@ -50,6 +50,12 @@ int MilliSeconds::toBitPosition(const waltz::engine::SoundPlayer::SampleRate& aS
     return toArrayLength(aSampleRate.value()) * aSampleSize.value() / 8;
 }
 
+bool MilliSeconds::isSmallerThan(const MilliSeconds& aOther) const
+{
+    return value() < aOther.value();
+}
+
+
 int MilliSeconds::toF0ArrayLength() const
 {
     return (int)(mMilliSeconds_ / EngineSettings::getInstance().framePeriod());

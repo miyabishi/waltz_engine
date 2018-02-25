@@ -30,7 +30,6 @@ namespace waltz
                 MilliSeconds timeLength() const;
                 int length() const;
                 NotePointer at(int index) const;
-                PitchCurvePointer getPitchCurve() const ;
                 TimeRange timeRange() const;
             private:
                 QList<NotePointer> mNotes_;

@@ -21,6 +21,7 @@ namespace waltz
                 MilliSeconds add(const MilliSeconds& aOther) const;
                 MilliSeconds subtract(const MilliSeconds& aOther) const;
                 MilliSeconds dividedBy(const MilliSeconds& aOther) const;
+                bool isSmallerThan(const MilliSeconds& aOther) const;
 
                 static MilliSeconds fromSeconds(const double aSeconds);
 
