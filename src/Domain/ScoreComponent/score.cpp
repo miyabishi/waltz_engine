@@ -48,11 +48,6 @@ void Score::loadPitchCurve(const common::Commands::ParametersList &aPitchCurve,
     {
         PitchChangingPointPointer pitchCurve(
                     new PitchChangingPoint(aPitchCurve.at(index), aPlaybackStartingTime));
-        if(pitchCurve->position().isSmallerThan(aPlaybackStartingTime))
-        {
-            continue;
-        }
-
         mPitchCurve_->append(pitchCurve);
     }
 }
