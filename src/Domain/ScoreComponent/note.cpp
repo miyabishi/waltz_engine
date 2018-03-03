@@ -15,13 +15,12 @@ namespace
     const QString PARAMETER_NAME_VIBRATO_AMPLITUDE("VibratoAmplitude");
 }
 
-Note::Note(const waltz::common::Commands::Parameters& aParameters,
-           const MilliSeconds& aOffset)
+Note::Note(const waltz::common::Commands::Parameters& aParameters)
     : mTone_((ToneValue)aParameters.find(PARAMETER_NAME_TONE_VALUE).value().toInt(),
                aParameters.find(PARAMETER_NAME_TONE_OCTAVE).value().toInt())
     , mAlias_(* (new Alias(aParameters.find(PARAMETER_NAME_ALIAS).value().toString())))
     , mNoteStartTime_(
-          MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_NOTE_START_TIME).value().toDouble()).subtract(aOffset)
+          MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_NOTE_START_TIME).value().toDouble())
           )
     , mNoteLength_(MilliSeconds::fromSeconds(aParameters.find(PARAMETER_NAME_NOTE_LENGTH).value().toDouble()))
     , mNoteVolume_(NoteVolumePointer(new NoteVolume(aParameters.find(PARAMETER_NAME_NOTE_VOLUME).value().toInt())))

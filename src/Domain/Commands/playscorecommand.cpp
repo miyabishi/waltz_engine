@@ -12,6 +12,7 @@ using namespace waltz::engine::ScoreComponent;
 namespace
 {
     const CommandId COMMAND_ID_PLAY_SCORE("PlayScore");
+    const QString PARAMETER_NAME_PLAY_BACK_STARTING_TIME("PlaybackStartingTime");
 }
 
 PlayScoreCommand::PlayScoreCommand()
@@ -22,5 +23,7 @@ PlayScoreCommand::PlayScoreCommand()
 void PlayScoreCommand::exec(const Parameters &aParameters)
 {
     waltz::engine::ScoreComponent::Score score(aParameters);
-    Vocal::getInstance().sing(score);
+    MilliSeconds aPlybackStartingTime = MilliSeconds::fromSeconds(
+                aParameters.find(PARAMETER_NAME_PLAY_BACK_STARTING_TIME).value().toDouble());
+    Vocal::getInstance().sing(score, aPlybackStartingTime);
 }

@@ -42,7 +42,7 @@ namespace waltz
                                const WorldParametersCacheId& aWorldParametersCacheId);
 
                 QVector<double> toVector() const;
-                QByteArray toByteArray() const;
+                QByteArray toByteArray(const ScoreComponent::MilliSeconds& aStartTime = ScoreComponent::MilliSeconds(0.0)) const;
                 SoundDataInformationPointer soundDataInformation() const;
                 void outputWaveDataForDebug(const QString& aFileName) const;
 

@@ -104,7 +104,7 @@ void SoundData::initializeWavDataByByteArray()
 }
 
 
-QByteArray SoundData::toByteArray() const
+QByteArray SoundData::toByteArray(const ScoreComponent::MilliSeconds& aStartTime) const
 {
     QByteArray byteArray;
 
@@ -113,7 +113,7 @@ QByteArray SoundData::toByteArray() const
     buffer.open(QIODevice::WriteOnly);
     QDataStream stream(&buffer);
     stream.setByteOrder(QDataStream::LittleEndian);
-    for (int index = 0; index < mSoundVector_.size(); ++index)
+    for (int index = mSoundDataInformation_->calculateIndex(aStartTime); index < mSoundVector_.size(); ++index)
     {
         int16_t tmp_signal = roudedSoundValue(index);
         stream << tmp_signal;

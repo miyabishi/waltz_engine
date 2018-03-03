@@ -23,7 +23,8 @@ namespace waltz
                 void loadVoiceLibrary(const QString& aPath);
                 void singSingleNote(
                         const waltz::engine::ScoreComponent::Note& aNote);
-                void sing(const waltz::engine::ScoreComponent::Score& aScore);
+                void sing(const waltz::engine::ScoreComponent::Score& aScore,
+                          const waltz::engine::ScoreComponent::MilliSeconds& aStartPosition);
                 void stopSinging();
                 waltz::agent::WaltzVocalAgent* vocalAgent();
 

@@ -34,7 +34,8 @@ Player::~Player()
 {
 }
 
-void Player::start(SoundDataPointer aSoundData)
+void Player::start(SoundDataPointer aSoundData,
+                   const waltz::engine::ScoreComponent::MilliSeconds& aPlaybackStartingTime)
 {
     SoundDataInformationPointer soundDataInformation = aSoundData->soundDataInformation();
     QAudioFormat format = soundDataInformation->createAudioFormat();
@@ -47,13 +48,16 @@ void Player::start(SoundDataPointer aSoundData)
     }
 
     mAudioOutput_ = QSharedPointer<QAudioOutput>(new QAudioOutput(format, this));
-    mByteArray_ = QSharedPointer<QByteArray>(new QByteArray(aSoundData->toByteArray()));
+
+    mByteArray_ = QSharedPointer<QByteArray>(new QByteArray(aSoundData->toByteArray(aPlaybackStartingTime)));
     mDataStream_ = QSharedPointer<QDataStream>(new QDataStream(mByteArray_.data(), QIODevice::ReadWrite));
     QThread::sleep(1);
     mAudioOutput_->setNotifyInterval(50);
     mAudioOutput_->setBufferSize(16 * 1280);
     connect(mAudioOutput_.data(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(stateChangedHandler(QAudio::State)));
+
     mAudioOutput_->start(mDataStream_->device());
+
     CommunicationServer::getInstance().sendMessage(Message(COMMAND_ID_START_SEEK_BAR));
     return;
 }

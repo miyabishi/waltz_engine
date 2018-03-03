@@ -14,8 +14,7 @@ namespace waltz
             class PitchChangingPoint
             {
             public:
-                explicit PitchChangingPoint(const common::Commands::Parameters& aParameters,
-                                            const MilliSeconds& aOffset);
+                explicit PitchChangingPoint(const common::Commands::Parameters& aParameters);
             public:
                 MilliSeconds position() const;
                 double value() const;

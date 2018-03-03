@@ -72,11 +72,12 @@ void Vocal::singSingleNote(const Note& /*aNote*/)
     */
 }
 
-void Vocal::sing(const Score &aScore)
+void Vocal::sing(const Score &aScore,
+                 const waltz::engine::ScoreComponent::MilliSeconds& aStartPosition)
 {
     if(! mVocalAgent_.isLibraryLoaded()) return;
 
-    mPlayer_.start(aScore.toSoundData());
+    mPlayer_.start(aScore.toSoundData(), aStartPosition);
 }
 
 void Vocal::stopSinging()

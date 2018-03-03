@@ -23,7 +23,8 @@ namespace waltz
                 ~Player();
 
             public:
-                void start(SoundDataPointer aSoundData);
+                void start(SoundDataPointer aSoundData,
+                           const waltz::engine::ScoreComponent::MilliSeconds& aPlaybackStartingTime);
                 void stop();
 
             private slots:
