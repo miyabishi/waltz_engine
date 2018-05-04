@@ -67,18 +67,16 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                                                  firstData.waveformRawDataSize())),
                                soundDataInformation));
 
-    //PitchCurvePointer pitchCurve = mNotes_.getPitchCurve();
-
     NotePointer firstNote = mNotes_.at(0);
-    TimeRange firstNoteTimeRange(firstNote->noteStartTime().toMilliSeconds()
-                                 .subtract(MilliSeconds(firstData.preceding().asMilliSeconds())),
+    TimeRange firstDataSoundRange(firstNote->noteStartTime().toMilliSeconds()
+                                                            .subtract(mPrecedingTime_),
                                  firstNote->endTime());
 
     // TODO WorldParametersCacheId を一意なものにすること
     soundData->transform(aPitchCurve,
                          firstNote->noteVolume(),
                          firstNote->vibrato(),
-                         firstNoteTimeRange,
+                         firstDataSoundRange,
                          MilliSeconds(firstData.lengthOfFixedRange().asMilliSeconds()),
                          WorldParametersCacheId(QString::fromStdString(firstData.phonemes())));
 
@@ -86,12 +84,12 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
     // TODO
     if ( fragmentList.length() < mNotes_.length())
     {
-        qDebug() << "return NULL!";
         return SoundDataPointer();
     }
 
     MilliSeconds firstNoteFixedTime = MilliSeconds(firstData.lengthOfFixedRange().asMilliSeconds());
-    MilliSeconds expandTimeOfPreNote = firstNoteTimeRange.length().subtract(firstNoteFixedTime);
+    MilliSeconds soundLengthOfPreData = firstDataSoundRange.length();
+    MilliSeconds extendTimeOfPreData = soundLengthOfPreData.subtract(firstNoteFixedTime);
 
     // TODO: 結合 まだ mNotes_の数とfragmentの数が異なる場合には対応していない
     for(int index = 1; index < mNotes_.length(); ++index)
@@ -107,11 +105,15 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
         NotePointer note = mNotes_.at(index);
         qDebug() << "alias:" << QString::fromStdString(note->alias()->value());
         MilliSeconds overlapTime = MilliSeconds(data.preceding().asMilliSeconds());
+
+        MilliSeconds fixedRangeTime = MilliSeconds(data.lengthOfFixedRange().asMilliSeconds());
+        MilliSeconds precedingTime = MilliSeconds(data.preceding().asMilliSeconds());
+
         MilliSeconds soundStartTime = note->noteStartTime().toMilliSeconds()
-                                                           .subtract(overlapTime);
+                                                           .subtract(precedingTime);
         MilliSeconds soundEndTime = note->endTime();
         TimeRange soundRange(soundStartTime,soundEndTime);
-        MilliSeconds fixedRangeTime = MilliSeconds(data.lengthOfFixedRange().asMilliSeconds());
+
 
         fragmentSoundData->transform(aPitchCurve,
                                      note->noteVolume(),
@@ -121,32 +123,34 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                                      WorldParametersCacheId(QString::fromStdString(data.phonemes())));
 
         // overlapTimeが前のノートの伸張部分より長い場合は調整する
-        qDebug() << "expandTimeOfPreNote:" << expandTimeOfPreNote.value();
-        if (expandTimeOfPreNote.isSmallerThan(MilliSeconds(0.0)))
+        if (extendTimeOfPreData.isSmallerThan(MilliSeconds(0.0)))
         {
-            fragmentSoundData = fragmentSoundData->rightSideFrom(overlapTime);
-            overlapTime = MilliSeconds(0.0);
+            fragmentSoundData = fragmentSoundData->rightSideFrom(precedingTime);
+            overlapTime = soundLengthOfPreData.dividedBy(MilliSeconds(5.0));// 値は適当
+            precedingTime = MilliSeconds(0.0);
         }
-        else if (expandTimeOfPreNote.isSmallerThan(overlapTime))
+        else if (extendTimeOfPreData.isSmallerThan(precedingTime))
         {
             qDebug() << Q_FUNC_INFO << "adjust!!";
-            MilliSeconds delta = overlapTime.subtract(expandTimeOfPreNote);
+            MilliSeconds delta = precedingTime.subtract(extendTimeOfPreData);
             qDebug() << "delta :" << delta.value();
             fragmentSoundData = fragmentSoundData->rightSideFrom(delta);
-            overlapTime = expandTimeOfPreNote;
+            overlapTime = soundLengthOfPreData.dividedBy(MilliSeconds(5.0));
         }
 
         soundData->appendDataWithCrossfade(fragmentSoundData,
-                                           soundStartTime.subtract(mNotes_.startTime()).add(mPrecedingTime_),
+                                           note->noteStartTime().toMilliSeconds().subtract(mNotes_.startTime()).add(mPrecedingTime_),
+                                           precedingTime,
                                            overlapTime);
 
-        expandTimeOfPreNote = soundRange.length().subtract(fixedRangeTime);
+        soundLengthOfPreData = soundRange.length();
+        extendTimeOfPreData = soundLengthOfPreData.subtract(fixedRangeTime);
     }
 
     aPitchCurve->outputForDebug("pitchCurve_debug.txt");
     return soundData;
 }
-// ここのmPrecedingTime直したい。。。
+
 PhraseStartTime Phrase::phraseStartTime() const
 {
     return PhraseStartTime(mNotes_.startTime().subtract(mPrecedingTime_));

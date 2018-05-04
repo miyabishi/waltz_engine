@@ -33,6 +33,7 @@ namespace waltz
                                 const waltz::engine::ScoreComponent::MilliSeconds& aStartTime);
                 void appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
                                              const waltz::engine::ScoreComponent::MilliSeconds& aStartTime,
+                                             const waltz::engine::ScoreComponent::MilliSeconds& aPrecedingTime,
                                              const waltz::engine::ScoreComponent::MilliSeconds& aOverlapTime);
                 void transform(const ScoreComponent::PitchCurvePointer aPitchCurve,
                                const ScoreComponent::NoteVolumePointer aNoteVolume,
