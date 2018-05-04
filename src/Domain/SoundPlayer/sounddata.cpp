@@ -7,6 +7,8 @@
 #include "worldparametersrepository.h"
 #include "sounddata.h"
 
+#include <QDebug>
+
 using namespace waltz::engine::SoundPlayer;
 using namespace waltz::engine::ScoreComponent;
 using namespace waltz::engine::SoundPlayer;
@@ -107,7 +109,6 @@ void SoundData::initializeWavDataByByteArray()
 QByteArray SoundData::toByteArray(const ScoreComponent::MilliSeconds& aStartTime) const
 {
     QByteArray byteArray;
-
     QBuffer buffer;
     buffer.setBuffer(&byteArray);
     buffer.open(QIODevice::WriteOnly);
@@ -171,10 +172,9 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     updateInformationIfNotInitialized(aSoundData->soundDataInformation());
     int startTimeIndex = mSoundDataInformation_->calculateIndex(aStartTime);
     int overlapArrayLength = mSoundDataInformation_->calculateIndex(aOverlapTime);
-    int baseSoundVectorLength = startTimeIndex + overlapArrayLength;
 
-    shrinkSoundVectorIfLongerThan(baseSoundVectorLength);
-    extendSoundVectorIfShorterThan(baseSoundVectorLength);
+    extendSoundVectorIfShorterThan(overlapArrayLength);
+    shrinkSoundVectorIfLongerThan(startTimeIndex);
 
     for(int index = 0; index < aSoundData->toVector().length(); ++index)
     {
@@ -200,20 +200,24 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     }
 }
 
+QSharedPointer<SoundData> SoundData::rightSideFrom(const ScoreComponent::MilliSeconds& aStartTime) const
+{
+    QSharedPointer<QByteArray> data =
+            QSharedPointer<QByteArray>(new QByteArray(toByteArray(aStartTime)));
+    return SoundDataPointer(new SoundData(data, mSoundDataInformation_));
+}
+
 void SoundData::shrinkSoundVectorIfLongerThan(int aLength)
 {
-    if (mSoundVector_.length() > aLength)
-    {
-        qDebug() << Q_FUNC_INFO << "SHRINK!";
-        mSoundVector_ = mSoundVector_.mid(0, aLength);
-    }
+    if (mSoundVector_.length() <= aLength) return;
+    qDebug() << Q_FUNC_INFO << "shrink";
+    mSoundVector_ = mSoundVector_.mid(0, aLength);
 }
 
 void SoundData::extendSoundVectorIfShorterThan(int aLength)
 {
     while (mSoundVector_.length() < aLength)
     {
-        qDebug() << Q_FUNC_INFO << "EXTEND!";
         mSoundVector_.append(0);
     }
 }

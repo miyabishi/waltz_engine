@@ -45,6 +45,7 @@ namespace waltz
                 QByteArray toByteArray(const ScoreComponent::MilliSeconds& aStartTime = ScoreComponent::MilliSeconds(0.0)) const;
                 SoundDataInformationPointer soundDataInformation() const;
                 void outputWaveDataForDebug(const QString& aFileName) const;
+                QSharedPointer<SoundData> rightSideFrom(const ScoreComponent::MilliSeconds& aStartTime) const;
 
             private:
                 void updateInformationIfNotInitialized(SoundDataInformationPointer aSoundDataInformation);

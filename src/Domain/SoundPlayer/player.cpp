@@ -64,6 +64,7 @@ void Player::start(SoundDataPointer aSoundData,
 
 void Player::stop()
 {
+    if (mAudioOutput_.isNull()) return;
     mAudioOutput_->stop();
 }
 
