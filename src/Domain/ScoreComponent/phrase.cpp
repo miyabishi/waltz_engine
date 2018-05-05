@@ -140,19 +140,14 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 
         if (extendTimeOfPreData.isSmallerThan(MilliSeconds(0.0)))
         {
-            qDebug() << Q_FUNC_INFO << "adjust";
-            qDebug() << Q_FUNC_INFO << "delta = minus ";
-            fragmentSoundData = fragmentSoundData->rightSideFrom(precedingTime);
-            overlapTime = soundLengthOfPreData.dividedBy(MilliSeconds(5.0));// 値は適当
+//            fragmentSoundData = fragmentSoundData->rightSideFrom(precedingTime);
             precedingTime = overlapTime;
         }
         else if (extendTimeOfPreData.isSmallerThan(precedingTime))
         {
-            qDebug() << Q_FUNC_INFO << "adjust!!";
-            MilliSeconds delta = precedingTime.subtract(extendTimeOfPreData);
-            qDebug() << "delta :" << delta.value();
-            fragmentSoundData = fragmentSoundData->rightSideFrom(delta);
-            overlapTime = soundLengthOfPreData.dividedBy(MilliSeconds(5.0));
+//            MilliSeconds delta = precedingTime.subtract(extendTimeOfPreData);
+//            fragmentSoundData = fragmentSoundData->rightSideFrom(delta);
+            precedingTime = precedingTime.subtract(extendTimeOfPreData);
         }
 
         soundData->appendDataWithCrossfade(fragmentSoundData,
