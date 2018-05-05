@@ -32,6 +32,11 @@ namespace waltz
                 waltz::engine::SoundPlayer::SoundDataPointer toSoundData(const PitchCurvePointer aPitchCurve);
                 PhraseStartTime phraseStartTime() const;
                 PhraseLength    phraseLength() const;
+                waltz::engine::SoundPlayer::SoundDataPointer appendPhraseSoundData(
+                        const waltz::engine::SoundPlayer::SoundDataPointer aSoundData,
+                        const PitchCurvePointer aPitchCurve);
+
+
                 MilliSeconds    endTime() const;
 
             private:

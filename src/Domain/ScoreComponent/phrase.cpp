@@ -72,6 +72,17 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                                                             .subtract(mPrecedingTime_),
                                  firstNote->endTime());
 
+    if (firstNote->alias() != 0)
+    {
+        qDebug() << "first not alias:" << QString::fromStdString(firstNote->alias()->value());
+    }
+    else
+    {
+        qDebug() << "alias equal null";
+    }
+    qDebug() << "first note start time:" << firstNote->noteStartTime().toMilliSeconds().value();
+
+
     // TODO WorldParametersCacheId を一意なものにすること
     soundData->transform(aPitchCurve,
                          firstNote->noteVolume(),
@@ -104,6 +115,8 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 
         NotePointer note = mNotes_.at(index);
         qDebug() << "alias:" << QString::fromStdString(note->alias()->value());
+        qDebug() << "note start time:" << note->noteStartTime().toMilliSeconds().value();
+
         MilliSeconds overlapTime = MilliSeconds(data.preceding().asMilliSeconds());
 
         MilliSeconds fixedRangeTime = MilliSeconds(data.lengthOfFixedRange().asMilliSeconds());
@@ -122,12 +135,16 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                                      fixedRangeTime,
                                      WorldParametersCacheId(QString::fromStdString(data.phonemes())));
 
+
         // overlapTimeが前のノートの伸張部分より長い場合は調整する
+
         if (extendTimeOfPreData.isSmallerThan(MilliSeconds(0.0)))
         {
+            qDebug() << Q_FUNC_INFO << "adjust";
+            qDebug() << Q_FUNC_INFO << "delta = minus ";
             fragmentSoundData = fragmentSoundData->rightSideFrom(precedingTime);
             overlapTime = soundLengthOfPreData.dividedBy(MilliSeconds(5.0));// 値は適当
-            precedingTime = MilliSeconds(0.0);
+            precedingTime = overlapTime;
         }
         else if (extendTimeOfPreData.isSmallerThan(precedingTime))
         {
@@ -148,6 +165,18 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
     }
 
     aPitchCurve->outputForDebug("pitchCurve_debug.txt");
+    return soundData;
+}
+
+waltz::engine::SoundPlayer::SoundDataPointer Phrase::appendPhraseSoundData(
+        const waltz::engine::SoundPlayer::SoundDataPointer aSoundData,
+        const PitchCurvePointer aPitchCurve)
+{
+    SoundDataPointer soundData = aSoundData;
+    PitchCurvePointer pitchCurve = aPitchCurve;
+    SoundDataPointer appendSoundData = toSoundData(pitchCurve);
+    MilliSeconds startTime(phraseStartTime().toMilliSeconds());
+    soundData->appendData(appendSoundData, startTime);
     return soundData;
 }
 

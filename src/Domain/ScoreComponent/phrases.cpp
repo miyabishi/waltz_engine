@@ -1,4 +1,5 @@
 #include "phrases.h"
+#include <QDebug>
 
 using namespace waltz::engine::ScoreComponent;
 using namespace waltz::engine::SoundPlayer;
@@ -28,9 +29,8 @@ SoundDataPointer Phrases::toSoundData(const PitchCurvePointer aPitchCurve) const
     SoundDataPointer soundData(new SoundData());
     for(int index = 0; index < mPhrases_.length(); ++index)
     {
-        // 注意 toSoundDataでphraseStartTime が設定されている　リファクタ対象
-        soundData->appendData(mPhrases_.at(index)->toSoundData(aPitchCurve),
-                              mPhrases_.at(index)->phraseStartTime().toMilliSeconds());
+        qDebug() << "phrase index:" << index;
+        soundData = mPhrases_.at(index)->appendPhraseSoundData(soundData, aPitchCurve);
     }
 
     return soundData;

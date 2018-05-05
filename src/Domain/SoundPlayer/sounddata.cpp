@@ -178,12 +178,19 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     shrinkSoundVectorIfLongerThan(startTimeIndex);
     extendSoundVectorIfShorterThan(startTimeIndex);
 
+    bool overlapFlag = false;
+    bool overWriteFlag = false;
+
+    qDebug() << "base soundVectorSize:" << mSoundVector_.size();
+    qDebug() << "append soundVector size:" << aSoundData->toVector().length();
+
     for(int index = 0; index < aSoundData->toVector().length(); ++index)
     {
-        int currentSoundVectorIndex = startTimeIndex- overlapArrayLength - precedingArrayLength + index ;
+        int currentSoundVectorIndex = startTimeIndex - precedingArrayLength + index ;
 
         if (index >= overlapArrayLength)
         {
+            overlapFlag = true;
             mSoundVector_.append(aSoundData->toVector().at(index));
             continue;
         }
@@ -198,13 +205,17 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
                                            index,
                                            overlapArrayLength);
 
-        if (mSoundVector_.size() >= currentSoundVectorIndex)
+        if (mSoundVector_.size() <= currentSoundVectorIndex)
         {
             qDebug() << Q_FUNC_INFO << "error!!";
             continue;
         }
+
+        overWriteFlag = true;
         mSoundVector_[currentSoundVectorIndex] = baseData + appendData;
     }
+    qDebug() << "overlap:" << overlapFlag;
+    qDebug() << "overwrite" << overWriteFlag;
 }
 
 QSharedPointer<SoundData> SoundData::rightSideFrom(const ScoreComponent::MilliSeconds& aStartTime) const
