@@ -52,7 +52,7 @@ void Score::loadPhrases(const common::Commands::ParametersList &aNoteList)
     for(int index = 1; index < aNoteList.size(); ++index)
     {
         NotePointer note(new Note(aNoteList.at(index)));
-        if(qAbs(notes.endTime().value() - note->noteStartTime().toMilliSeconds().value()) > 10)
+        if(qAbs(notes.endTime().value() - note->noteStartTime().toMilliSeconds().value()) > 2 )
         {
             mPhrases_.apend(PhrasePointer(new Phrase(notes)));
             notes = Notes();

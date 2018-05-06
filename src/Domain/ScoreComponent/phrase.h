@@ -41,7 +41,8 @@ namespace waltz
 
             private:
                 Notes           mNotes_;
-                MilliSeconds    mPrecedingTime_;
+                MilliSeconds    mPrecedingTime_; // TODO 修正対象
+                MilliSeconds    mOverlapTime_; // TODO 修正対象
             };
             typedef QSharedPointer<Phrase> PhrasePointer;
         } // namespace ScoreComponent

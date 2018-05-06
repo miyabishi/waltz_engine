@@ -16,6 +16,7 @@ using namespace waltz::agent;
 Phrase::Phrase(const Notes& aNotes)
     : mNotes_(aNotes)
     , mPrecedingTime_(0)
+    , mOverlapTime_(0)
 {
 }
 
@@ -26,6 +27,7 @@ Phrase::~Phrase()
 Phrase::Phrase(const Phrase& aOther)
     : mNotes_(aOther.mNotes_)
     , mPrecedingTime_(aOther.mPrecedingTime_)
+    , mOverlapTime_(aOther.mOverlapTime_)
 {
 }
 
@@ -33,6 +35,7 @@ Phrase& Phrase::operator=(const Phrase& aOther)
 {
     mNotes_ = aOther.mNotes_;
     mPrecedingTime_ = aOther.mPrecedingTime_;
+    mOverlapTime_ = aOther.mOverlapTime_;
     return (*this);
 }
 
@@ -41,6 +44,8 @@ std::vector<waltz::agent::IAlias*> Phrase::aliases() const
     return mNotes_.aliases().toStdVector();
 }
 
+
+// TODO: リファクタ対象。長すぎる関数
 SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 {
     WaltzVocalAgent* agent = Vocal::getInstance().vocalAgent();
@@ -54,6 +59,7 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 
     FragmentData firstData = fragmentList.at(0).at(0);
     mPrecedingTime_ = MilliSeconds(firstData.preceding().asMilliSeconds());
+    mOverlapTime_ = MilliSeconds(firstData.overlap().asMilliSeconds());
 
     SampleSize sampleSize = SampleSize(firstData.sampleSize());
     SampleRate sampleRate = SampleRate(firstData.sampleRate());
@@ -140,13 +146,10 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 
         if (extendTimeOfPreData.isSmallerThan(MilliSeconds(0.0)))
         {
-//            fragmentSoundData = fragmentSoundData->rightSideFrom(precedingTime);
             precedingTime = overlapTime;
         }
         else if (extendTimeOfPreData.isSmallerThan(precedingTime))
         {
-//            MilliSeconds delta = precedingTime.subtract(extendTimeOfPreData);
-//            fragmentSoundData = fragmentSoundData->rightSideFrom(delta);
             precedingTime = precedingTime.subtract(extendTimeOfPreData);
         }
 
@@ -171,7 +174,11 @@ waltz::engine::SoundPlayer::SoundDataPointer Phrase::appendPhraseSoundData(
     PitchCurvePointer pitchCurve = aPitchCurve;
     SoundDataPointer appendSoundData = toSoundData(pitchCurve);
     MilliSeconds startTime(phraseStartTime().toMilliSeconds());
-    soundData->appendData(appendSoundData, startTime);
+
+    soundData->appendDataWithCrossfade(appendSoundData,
+                                       startTime,
+                                       mPrecedingTime_,
+                                       mOverlapTime_);
     return soundData;
 }
 
