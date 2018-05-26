@@ -80,7 +80,9 @@ SOURCES += main.cpp \
     src/Domain/ScoreComponent/vibratolength.cpp \
     src/Domain/ScoreComponent/vibratowavelength.cpp \
     src/Domain/ScoreComponent/vibratostarttime.cpp \
-    src/Domain/Commands/stopcommand.cpp
+    src/Domain/Commands/stopcommand.cpp \
+    src/Domain/VocalComponent/correspondencealias.cpp \
+    src/Domain/VocalComponent/correspondencealiaslist.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -143,7 +145,9 @@ HEADERS  += \
     src/Domain/ScoreComponent/vibratolength.h \
     src/Domain/ScoreComponent/vibratowavelength.h \
     src/Domain/ScoreComponent/vibratostarttime.h \
-    src/Domain/Commands/stopcommand.h
+    src/Domain/Commands/stopcommand.h \
+    src/Domain/VocalComponent/correspondencealias.h \
+    src/Domain/VocalComponent/correspondencealiaslist.h
 
 RESOURCES += \
     resource/waltzengine.qrc

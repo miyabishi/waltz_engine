@@ -12,6 +12,7 @@
 #include "src/Domain/ScoreComponent/phrases.h"
 #include "src/Domain/ScoreComponent/score.h"
 
+#include "correspondencealiaslist.h"
 #include "vocal.h"
 
 using namespace waltz::common::Commands;
@@ -50,6 +51,13 @@ void Vocal::loadVoiceLibrary(const QString &aPath)
     parameters.append(Parameter("LibraryName",
                                 QString::fromStdString(mVocalAgent_.libraryName())));
     parameters.append(Parameter("LibraryFilePath", aPath));
+
+
+    CorrespondenceAliasListPointer correspondenceAliasList(
+                new CorrespondenceAliasList(mVocalAgent_.correspondenceAliasVector()));
+
+    parameters.append(correspondenceAliasList->toParameter());
+
 
     CommunicationServer::getInstance().sendMessage(
                 Message(COMMAND_ID_UPDATE_LIBRARY_INFORMATION,
