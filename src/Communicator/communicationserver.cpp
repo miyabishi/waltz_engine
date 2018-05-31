@@ -26,7 +26,7 @@ CommunicationServer::CommunicationServer()
                                     QWebSocketServer::NonSecureMode,
                                     this))
 {    
-    if (! mServer_->listen(QHostAddress::LocalHost, 8080))
+    if (! mServer_->listen(QHostAddress::LocalHost, 10522))
     {
         return;
     }

@@ -4,6 +4,7 @@
 #include "playscorecommand.h"
 #include "savewavcommand.h"
 #include "stopcommand.h"
+#include "exitcommand.h"
 
 using namespace waltz::engine::Commands;
 using namespace waltz::common::Commands;
@@ -44,4 +45,6 @@ CommandFactory::CommandFactory()
                              new SaveWavCommand()));
     mCommandList_.append(CommandPointer(
                              new StopCommand()));
+    mCommandList_.append(CommandPointer(
+                             new ExitCommand()));
 }

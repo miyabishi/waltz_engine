@@ -82,7 +82,8 @@ SOURCES += main.cpp \
     src/Domain/ScoreComponent/vibratostarttime.cpp \
     src/Domain/Commands/stopcommand.cpp \
     src/Domain/VocalComponent/correspondencealias.cpp \
-    src/Domain/VocalComponent/correspondencealiaslist.cpp
+    src/Domain/VocalComponent/correspondencealiaslist.cpp \
+    src/Domain/Commands/exitcommand.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -147,7 +148,8 @@ HEADERS  += \
     src/Domain/ScoreComponent/vibratostarttime.h \
     src/Domain/Commands/stopcommand.h \
     src/Domain/VocalComponent/correspondencealias.h \
-    src/Domain/VocalComponent/correspondencealiaslist.h
+    src/Domain/VocalComponent/correspondencealiaslist.h \
+    src/Domain/Commands/exitcommand.h
 
 RESOURCES += \
     resource/waltzengine.qrc
