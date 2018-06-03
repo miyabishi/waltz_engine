@@ -5,6 +5,7 @@
 #include "savewavcommand.h"
 #include "stopcommand.h"
 #include "exitcommand.h"
+#include "loaddefaultvoicelibrarycommand.h"
 
 using namespace waltz::engine::Commands;
 using namespace waltz::common::Commands;
@@ -47,4 +48,6 @@ CommandFactory::CommandFactory()
                              new StopCommand()));
     mCommandList_.append(CommandPointer(
                              new ExitCommand()));
+    mCommandList_.append(CommandPointer(
+                             new LoadDefaultVoiceLibraryCommand()));
 }

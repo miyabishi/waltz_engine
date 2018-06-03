@@ -1,6 +1,7 @@
 #ifndef ENGINESETTINGS_H
 #define ENGINESETTINGS_H
 
+#include <QString>
 
 namespace waltz
 {
@@ -15,6 +16,8 @@ namespace waltz
                 static EngineSettings& getInstance();
                 double framePeriod() const;
                 double parameterResolution() const;
+                QString defaultVoiceLibraryPath() const;
+
             private:
                 static EngineSettings* mInstance_;
                 EngineSettings();

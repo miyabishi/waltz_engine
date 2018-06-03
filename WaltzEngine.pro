@@ -83,7 +83,8 @@ SOURCES += main.cpp \
     src/Domain/Commands/stopcommand.cpp \
     src/Domain/VocalComponent/correspondencealias.cpp \
     src/Domain/VocalComponent/correspondencealiaslist.cpp \
-    src/Domain/Commands/exitcommand.cpp
+    src/Domain/Commands/exitcommand.cpp \
+    src/Domain/Commands/loaddefaultvoicelibrarycommand.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -149,7 +150,8 @@ HEADERS  += \
     src/Domain/Commands/stopcommand.h \
     src/Domain/VocalComponent/correspondencealias.h \
     src/Domain/VocalComponent/correspondencealiaslist.h \
-    src/Domain/Commands/exitcommand.h
+    src/Domain/Commands/exitcommand.h \
+    src/Domain/Commands/loaddefaultvoicelibrarycommand.h
 
 RESOURCES += \
     resource/waltzengine.qrc

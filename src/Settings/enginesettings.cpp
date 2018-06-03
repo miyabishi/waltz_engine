@@ -1,4 +1,6 @@
 #include "enginesettings.h"
+#include <QString>
+#include <QFileInfo>
 
 using namespace waltz::engine::Settings;
 
@@ -8,6 +10,7 @@ namespace
 {
     const double FRAME_PERIOD = 0.5; // ms
     const double PARAMETER_RESOLUTION = 1.0; // ms
+    const QString DEFAULT_VOICE_LIBRARY_PATH = "./momo/momo.wvocal";
 }
 
 EngineSettings& EngineSettings::getInstance()
@@ -30,7 +33,12 @@ double EngineSettings::parameterResolution() const
     return PARAMETER_RESOLUTION;
 }
 
+QString EngineSettings::defaultVoiceLibraryPath() const
+{
+    QFileInfo info(DEFAULT_VOICE_LIBRARY_PATH);
+    return info.absoluteFilePath();
+}
+
 EngineSettings::EngineSettings()
 {
-
 }

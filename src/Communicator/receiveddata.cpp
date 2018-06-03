@@ -1,4 +1,5 @@
 #include <QtDebug>
+#include <QDebug>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -49,6 +50,7 @@ void ReceivedData::parseReceivedData(const QByteArray &aReceivedData)
 {
     QJsonParseError error;
     QJsonDocument jsonDocument(QJsonDocument::fromJson(aReceivedData, &error));
+    qDebug() << jsonDocument;
     if (error.error != QJsonParseError::NoError)
     {
         TaskTrayNotifier::getInstance().notifyError(error.errorString());

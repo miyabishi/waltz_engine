@@ -3,9 +3,14 @@
 #include <QSystemTrayIcon>
 #include <QMessageBox>
 #include "src/Communicator/communicationserver.h"
+#include "src/Domain/VocalComponent/vocal.h"
+
+#include <QDebug>
 
 using namespace waltz::engine::dialog;
 using namespace waltz::engine::Communicator;
+using namespace waltz::common::Communicator;
+using namespace waltz::common::Commands;
 
 int main(int argc, char *argv[])
 {

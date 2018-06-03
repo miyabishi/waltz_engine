@@ -2,10 +2,16 @@
 #include <QtWebSockets/qwebsocket.h>
 #include "communicationserver.h"
 #include "src/Notifier/tasktraynotifier.h"
+#include "src/Settings/enginesettings.h"
+#include "src/Domain/VocalComponent/vocal.h"
+#include <waltz_common/commandid.h>
+#include <QFileInfo>
+
 #include "receiveddata.h"
 
 using namespace waltz::engine::Communicator;
 using namespace waltz::common::Communicator;
+using namespace waltz::common::Commands;
 using namespace waltz::engine::Notifier;
 
 
@@ -47,6 +53,8 @@ void CommunicationServer::onNewConnection()
     connect(pSocket, SIGNAL(binaryMessageReceived(QByteArray)), this, SLOT(processMessage(QByteArray)));
     connect(pSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
     mClients_ << pSocket;
+
+    sendMessage(Message(CommandId("EngineIsReady")));
 }
 
 
