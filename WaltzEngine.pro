@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui websockets multimedia
+QT       += core gui websockets multimedia sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

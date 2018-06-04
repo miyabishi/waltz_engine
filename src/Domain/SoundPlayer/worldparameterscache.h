@@ -3,6 +3,7 @@
 
 #include <QVector>
 #include <QSharedPointer>
+#include <QJsonObject>
 #include "worldparameters.h"
 
 namespace waltz
@@ -17,6 +18,9 @@ namespace waltz
             public:
                 explicit WorldParametersCache(WorldParameters* aWorldParameters);
                 void createWorldParameters(WorldParameters* aWorldParameters);
+
+            public:
+                QJsonObject toJsonObject() const;
 
             private:
                 double mFramePeriod_;

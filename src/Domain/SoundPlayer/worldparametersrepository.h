@@ -24,9 +24,10 @@ namespace waltz
                 void registerWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
                                              WorldParameters* aWorldParameters);
 
+                void saveToFile(const QString& aFilePath) const;
+
             private:
                 static WorldParametersRepository* mInstance_;
-
                 QMap<QString, WorldParametersCachePointer> mWorldParametersRepository_;
 
             private:

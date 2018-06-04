@@ -43,3 +43,7 @@ void WorldParametersRepository::registerWorldParameters(const WorldParametersCac
                 new WorldParametersCache(aWorldParameters));
 }
 
+void WorldParametersRepository::saveToFile(const QString &aFilePath) const
+{
+
+}

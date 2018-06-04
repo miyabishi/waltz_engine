@@ -1,3 +1,5 @@
+#include <QJsonDocument>
+#include <QJsonArray>
 #include "worldparameterscache.h"
 
 using namespace waltz::engine::SoundPlayer;
@@ -57,6 +59,39 @@ namespace
         }
         return result;
     }
+
+    QJsonArray createJsonArray(const QVector<double>& aVector)
+    {
+        QJsonArray ary;
+        for(int index = 0; index < aVector.size(); ++index)
+        {
+            ary.append(aVector.value(index));
+        }
+        return ary;
+    }
+    QJsonArray create2DJsonArray(const QVector<QVector<double>>& aVector)
+    {
+        QJsonArray aryRow;
+        for(int indexForX = 0; indexForX < aVector.size(); ++indexForX)
+        {
+            QJsonArray aryColumn;
+            for(int indexForY = 0; indexForY < aVector.at(indexForX).size(); ++indexForY)
+            {
+                aryColumn.append(aVector.at(indexForX).at(indexForY));
+            }
+            aryRow.append(aryColumn);
+        }
+        return aryRow;
+    }
+
+    const QString KEY_FRAME_PERIOD("FramePeriod");
+    const QString KEY_SAMPLING_FREQUENCY("SamplingFrequency");
+    const QString KEY_F0("F0");
+    const QString KEY_TIME_AXIS("TimeAxis");
+    const QString KEY_SPECTROGRAM("Spectrogram");
+    const QString KEY_APERIODICITY("Aperiodicity");
+    const QString KEY_SIZE_OF_FFT("SizeOfFFT");
+
 }
 
 
@@ -89,5 +124,19 @@ void WorldParametersCache::createWorldParameters(WorldParameters* aWorldParamete
                                                    mF0_.length(),
                                                    mSizeOfFFT_ / 2 + 1);
     aWorldParameters->sizeOfFFT = mSizeOfFFT_;
+}
 
+QJsonObject WorldParametersCache::toJsonObject() const
+{
+    QJsonObject jsonObject;
+
+    jsonObject[KEY_FRAME_PERIOD] = mFramePeriod_;
+    jsonObject[KEY_SAMPLING_FREQUENCY] = mSamplingFrequency_;
+    jsonObject[KEY_F0] = createJsonArray(mF0_);
+    jsonObject[KEY_TIME_AXIS] = createJsonArray(mTimeAxis_);
+    jsonObject[KEY_SPECTROGRAM] = create2DJsonArray(mSpectrogram_);
+    jsonObject[KEY_APERIODICITY] = create2DJsonArray(mAperiodicity_);
+    jsonObject[KEY_SIZE_OF_FFT] = mSizeOfFFT_;
+
+    return jsonObject;
 }
