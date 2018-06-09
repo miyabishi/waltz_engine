@@ -25,6 +25,7 @@ namespace waltz
                                              WorldParameters* aWorldParameters);
 
                 void saveToFile(const QString& aFilePath) const;
+                void loadFromFile(const QString& aFilePath);
 
             private:
                 static WorldParametersRepository* mInstance_;

@@ -224,17 +224,11 @@ QSharedPointer<SoundData> SoundData::rightSideFrom(const ScoreComponent::MilliSe
 void SoundData::shrinkSoundVectorIfLongerThan(int aLength)
 {
     if (mSoundVector_.length() <= aLength) return;
-    qDebug() << Q_FUNC_INFO << "shrink!";
     mSoundVector_ = mSoundVector_.mid(0, aLength);
 }
 
 void SoundData::extendSoundVectorIfShorterThan(int aLength)
 {
-    if (mSoundVector_.length() < aLength)
-    {
-        qDebug() << "extend!";
-    }
-
     while (mSoundVector_.length() < aLength)
     {
         mSoundVector_.append(0);

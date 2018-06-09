@@ -17,6 +17,7 @@ namespace waltz
             {
             public:
                 explicit WorldParametersCache(WorldParameters* aWorldParameters);
+                explicit WorldParametersCache(const QJsonObject& aWorldParameterData);
                 void createWorldParameters(WorldParameters* aWorldParameters);
 
             public:

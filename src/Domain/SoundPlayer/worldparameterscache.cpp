@@ -83,6 +83,36 @@ namespace
         }
         return aryRow;
     }
+    double dataToDouble(const QJsonObject& aData, const QString& aKey)
+    {
+        QJsonValue value = aData.find(aKey).value();
+        return value.toDouble();
+    }
+    QVector<double> createVectorFromData(const QJsonObject& aData, const QString& aKey)
+    {
+        QVector<double> ret;
+        QJsonValue value = aData.find(aKey).value();
+        foreach (const QJsonValue& v,value.toArray())
+        {
+            ret.append(v.toDouble());
+        }
+        return ret;
+    }
+
+    QVector<QVector<double>> create2DVectorFromData(const QJsonObject& aData, const QString& aKey)
+    {
+        QVector<QVector<double>> ret;
+        QJsonValue value = aData.find(aKey).value();
+        for(int index = 0; index < aData.size(); ++index)
+        {
+            QJsonArray ary = value.toArray();
+            foreach (const QJsonValue& v, ary[index].toArray())
+            {
+                ret[index].append(v.toDouble());
+            }
+        }
+        return ret;
+    }
 
     const QString KEY_FRAME_PERIOD("FramePeriod");
     const QString KEY_SAMPLING_FREQUENCY("SamplingFrequency");
@@ -107,6 +137,17 @@ WorldParametersCache::WorldParametersCache(WorldParameters* aWorldParameters)
                                     aWorldParameters->lengthOfF0,
                                     aWorldParameters->sizeOfFFT / 2 +1))
     , mSizeOfFFT_(aWorldParameters->sizeOfFFT)
+{
+}
+
+WorldParametersCache::WorldParametersCache(const QJsonObject& aWorldParameterData)
+    : mFramePeriod_(dataToDouble(aWorldParameterData, KEY_FRAME_PERIOD))
+    , mSamplingFrequency_(dataToDouble(aWorldParameterData, KEY_SAMPLING_FREQUENCY))
+    , mF0_(createVectorFromData(aWorldParameterData, KEY_F0))
+    , mTimeAxis_(createVectorFromData(aWorldParameterData, KEY_TIME_AXIS))
+    , mSpectrogram_(create2DVectorFromData(aWorldParameterData, KEY_SPECTROGRAM))
+    , mAperiodicity_(create2DVectorFromData(aWorldParameterData, KEY_APERIODICITY))
+    , mSizeOfFFT_(dataToDouble(aWorldParameterData, KEY_SIZE_OF_FFT))
 {
 }
 

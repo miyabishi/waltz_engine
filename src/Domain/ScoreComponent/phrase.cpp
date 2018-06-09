@@ -78,17 +78,6 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                                                             .subtract(mPrecedingTime_),
                                  firstNote->endTime());
 
-    if (firstNote->alias() != 0)
-    {
-        qDebug() << "first not alias:" << QString::fromStdString(firstNote->alias()->value());
-    }
-    else
-    {
-        qDebug() << "alias equal null";
-    }
-    qDebug() << "first note start time:" << firstNote->noteStartTime().toMilliSeconds().value();
-
-
     // TODO WorldParametersCacheId を一意なものにすること
     soundData->transform(aPitchCurve,
                          firstNote->noteVolume(),
