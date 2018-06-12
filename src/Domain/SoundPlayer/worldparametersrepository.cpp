@@ -3,6 +3,11 @@
 #include <QJsonDocument>
 #include <QFile>
 #include "worldparametersrepository.h"
+#include <QDir>
+#include <QFileInfo>
+#include <QDebug>
+#include <QSqlRecord>
+#include <QSqlQuery>
 
 using namespace waltz::engine::SoundPlayer;
 
@@ -26,78 +31,80 @@ WorldParametersRepository& WorldParametersRepository::getInstance()
 }
 
 WorldParametersRepository::WorldParametersRepository()
-    : mWorldParametersRepository_()
 {
+}
 
+WorldParametersRepository::~WorldParametersRepository()
+{
+}
+
+
+bool WorldParametersRepository::open(const QString &aDbPath)
+{
+    mDatabase_ = QSqlDatabase::addDatabase("QSQLITE");
+    mDatabase_.setDatabaseName(aDbPath);
+    return mDatabase_.open();
 }
 
 bool WorldParametersRepository::hasWorldParammeters(const WorldParametersCacheId& aWorldParametersCacheId) const
 {
-    return mWorldParametersRepository_.contains(aWorldParametersCacheId.value());
+    if (! mDatabase_.isOpen()) return false;
+    QSqlQuery query;
+    query.prepare("SELECT id FROM cache WHERE id = (:id)");
+    query.bindValue(":id", aWorldParametersCacheId.value());
+
+    if (query.exec())
+    {
+        if (query.next())
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 void WorldParametersRepository::loadWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
                                                     WorldParameters* aWorldParameters)
 {
-    WorldParametersCachePointer cache = mWorldParametersRepository_[aWorldParametersCacheId.value()];
-    if (cache.isNull())
+    if (! mDatabase_.isOpen()) return;
+
+    QSqlQuery query;
+    query.prepare("SELECT json FROM cache WHERE id = (:id)");
+    query.bindValue(":id", aWorldParametersCacheId.value());
+    if(! query.exec()) return;
+    int idJson = query.record().indexOf("json");
+
+    while (query.next())
     {
-        return;
+       QJsonDocument jsonDocument = QJsonDocument::fromBinaryData(
+                   qUncompress(query.value(idJson).toByteArray())
+                   );
+       WorldParametersCachePointer cache(
+                   new WorldParametersCache(jsonDocument.object())
+                   );
+
+       cache->createWorldParameters(aWorldParameters);
     }
-    cache->createWorldParameters(aWorldParameters);
 }
 
 void WorldParametersRepository::registerWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
                                                         WorldParameters* aWorldParameters)
 {
-    mWorldParametersRepository_[aWorldParametersCacheId.value()] =
-            WorldParametersCachePointer(
+    if (! mDatabase_.isOpen()) return;
+    if (hasWorldParammeters(aWorldParametersCacheId)) return;
+
+    QSqlQuery query;
+    query.prepare("INSERT INTO cache (id, json) VALUES (:id, :json)");
+    query.bindValue(":id", aWorldParametersCacheId.value());
+
+    WorldParametersCachePointer cache(
                 new WorldParametersCache(aWorldParameters));
-}
 
-void WorldParametersRepository::saveToFile(const QString &aFilePath) const
-{
-    QJsonObject jsonObject;
-    QJsonArray jsonArray;
-    QMap<QString, WorldParametersCachePointer>::const_iterator i = mWorldParametersRepository_.constBegin();
-    while (i != mWorldParametersRepository_.constEnd()) {
-        QJsonObject cacheJsonObject;
-        cacheJsonObject[KEY_PARAMETER_CACHE_ID] = i.key();
-        cacheJsonObject[KEY_PARAMETER_CACHE_VALUE] = i.value()->toJsonObject();
+    QJsonDocument doc(cache->toJsonObject());
+    query.bindValue(":json", qCompress(doc.toBinaryData()));
 
-        jsonArray.append(cacheJsonObject);
-        ++i;
-    }
-    jsonObject[KEY_PARAMETER_CACHE] = jsonArray;
-
-    QJsonDocument jsonDocument(jsonObject);
-    QByteArray data = jsonDocument.toJson();
-    QFile saveFile(aFilePath);
-    saveFile.open(QIODevice::WriteOnly);
-    saveFile.write(data);
-    saveFile.close();
-}
-
-void WorldParametersRepository::loadFromFile(const QString &aFilePath)
-{
-    QFile openFile(aFilePath);
-    openFile.open(QIODevice::ReadOnly);
-    QByteArray data = openFile.readAll();
-    openFile.close();
-
-    QJsonDocument jsonDocument(QJsonDocument::fromJson(data));
-    QJsonObject jsonObject(jsonDocument.object());
-    QJsonValue parameterCache = jsonObject.find(KEY_PARAMETER_CACHE).value();
-    QJsonArray parameterCacheArray = parameterCache.toArray();
-
-    foreach(const QJsonValue& value, parameterCacheArray)
+    if(! query.exec())
     {
-        QJsonObject object = value.toObject();
-        QJsonValue parameterCacheId = object.find(KEY_PARAMETER_CACHE_ID).value();
-        QJsonValue cacheValue = object.find(KEY_PARAMETER_CACHE_VALUE).value();
-        mWorldParametersRepository_[parameterCacheId.toString()]
-                = WorldParametersCachePointer(
-                    new WorldParametersCache(cacheValue.toObject())
-                    );
+        qDebug() << "failed to insert.";
     }
 }

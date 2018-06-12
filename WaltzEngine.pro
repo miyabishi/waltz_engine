@@ -158,17 +158,16 @@ RESOURCES += \
 
 DISTFILES +=
 
-# lib waltz vocal agent
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../WaltzVocalAgent/release/ -lWaltzVocalAgent
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../WaltzVocalAgent/debug/ -lWaltzVocalAgent
-else:unix: LIBS += -L$$PWD/../WaltzVocalAgent/ -lWaltzVocalAgent
-
-INCLUDEPATH += $$PWD/../WaltzVocalAgent/include
-DEPENDPATH += $$PWD/../WaltzVocalAgent/include
-
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../WaltzCommonLibrary/release/ -lWaltzCommonLibrary
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../WaltzCommonLibrary/debug/ -lWaltzCommonLibrary
 else:unix: LIBS += -L$$PWD/../WaltzCommonLibrary/ -lWaltzCommonLibrary
 
 INCLUDEPATH += $$PWD/../WaltzCommonLibrary/include
 DEPENDPATH += $$PWD/../WaltzCommonLibrary/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../WaltzVocalAgent/release/ -lWaltzVocalAgent
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../WaltzVocalAgent/debug/ -lWaltzVocalAgent
+else:unix: LIBS += -L$$PWD/../WaltzVocalAgent/ -lWaltzVocalAgent
+
+INCLUDEPATH += $$PWD/../WaltzVocalAgent/include
+DEPENDPATH += $$PWD/../WaltzVocalAgent/include

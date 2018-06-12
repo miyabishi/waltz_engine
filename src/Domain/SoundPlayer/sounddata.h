@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QVector>
 #include <QSharedPointer>
+#include <fragmentdata.h>
 
 #include "sounddatainformation.h"
 #include "worldparameterscacheid.h"
@@ -47,6 +48,10 @@ namespace waltz
                 SoundDataInformationPointer soundDataInformation() const;
                 void outputWaveDataForDebug(const QString& aFileName) const;
                 QSharedPointer<SoundData> rightSideFrom(const ScoreComponent::MilliSeconds& aStartTime) const;
+
+                static QSharedPointer<SoundData> fromFragmentData(const waltz::agent::FragmentData& aFragmentData);
+
+                void registerToWorldParameterRepository(const WorldParametersCacheId& aWorldParametersCacheId) const;
 
             private:
                 void updateInformationIfNotInitialized(SoundDataInformationPointer aSoundDataInformation);

@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <memory>
 #include <QTextStream>
 #include <QDataStream>
@@ -6,7 +5,6 @@
 #include <qmath.h>
 #include "worldparametersrepository.h"
 #include "sounddata.h"
-
 #include <QDebug>
 
 using namespace waltz::engine::SoundPlayer;
@@ -82,6 +80,20 @@ SoundData::SoundData(QSharedPointer<QByteArray> aData,
 {
     initializeWavDataByByteArray();
 }
+
+SoundDataPointer SoundData::fromFragmentData(const waltz::agent::FragmentData& aFragmentData)
+{
+    qDebug() << Q_FUNC_INFO;
+    SoundDataInformationPointer datainformation(
+                new SoundDataInformation(aFragmentData.sampleSize(), aFragmentData.sampleRate()));
+    QSharedPointer<QByteArray> data =
+            QSharedPointer<QByteArray>(
+                new QByteArray(aFragmentData.waveformRawData(),
+                               aFragmentData.waveformRawDataSize()));
+
+    return SoundDataPointer(new SoundData(data, datainformation));
+}
+
 
 SoundData::~SoundData()
 {
@@ -170,6 +182,7 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
                                         const MilliSeconds &aPrecedingTime,
                                         const MilliSeconds &aOverlapTime)
 {
+
     MilliSeconds precedingTime = aPrecedingTime;
     if (aPrecedingTime.isSmallerThan(aOverlapTime))
     {
@@ -184,15 +197,29 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     shrinkSoundVectorIfLongerThan(startTimeIndex);
     extendSoundVectorIfShorterThan(startTimeIndex);
 
+    qDebug() << Q_FUNC_INFO << __LINE__;
+    qDebug() << Q_FUNC_INFO << __LINE__
+             << "append sounddata length:" << aSoundData->toVector().length();
+    qDebug() << Q_FUNC_INFO << __LINE__
+             << "startTimeIndex:" << startTimeIndex;
+    qDebug() << Q_FUNC_INFO << __LINE__
+             << "precedingArrayLength:" << precedingArrayLength;
+    qDebug() << Q_FUNC_INFO << __LINE__
+             << "overlapArrayLength:" << overlapArrayLength;
+
     for(int index = 0; index < aSoundData->toVector().length(); ++index)
     {
         int currentSoundVectorIndex = startTimeIndex - precedingArrayLength + index ;
+/*        qDebug() << Q_FUNC_INFO << __LINE__
+                 << currentSoundVectorIndex;
+        */
 
         if (index >= overlapArrayLength)
         {
             mSoundVector_.append(aSoundData->toVector().at(index));
             continue;
         }
+
 
         double baseData = fadeOutFunction(mSoundVector_.at(currentSoundVectorIndex),
                                           0,
@@ -212,6 +239,7 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
 
         mSoundVector_[currentSoundVectorIndex] = baseData + appendData;
     }
+    qDebug() << "soundVector is created";
 }
 
 QSharedPointer<SoundData> SoundData::rightSideFrom(const ScoreComponent::MilliSeconds& aStartTime) const
@@ -361,6 +389,37 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
     delete output;
     delete input;
 }
+
+void SoundData::registerToWorldParameterRepository(const WorldParametersCacheId& aWorldParametersCacheId) const
+{
+    WorldParameters worldParameters = {0};
+    mSoundDataInformation_->setWorldParametersToValues(&worldParameters);
+
+    int inputLengh = mSoundVector_.size();
+    double *input = new double[inputLengh];
+
+    for (int index = 0; index < inputLengh; ++ index)
+    {
+        input[index] = noizeGate(mSoundVector_.at(index), 0.05);
+    }
+
+    Synthesizer::getInstance().estimateF0(input,
+                                          inputLengh,
+                                          &worldParameters);
+
+    Synthesizer::getInstance().SpectralEnvelopeEstimation(input,
+                                                          inputLengh,
+                                                          &worldParameters);
+    Synthesizer::getInstance().AperiodicityEstimation(input,
+                                                      inputLengh,
+                                                      &worldParameters);
+    WorldParametersRepository::getInstance().registerWorldParameters(aWorldParametersCacheId,
+                                                                    &worldParameters);
+
+    Synthesizer::getInstance().DestroyMemory(&worldParameters);
+    delete input;
+}
+
 
 void SoundData::outputWaveDataForDebug(const QString& aFileName) const
 {

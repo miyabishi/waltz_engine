@@ -77,6 +77,7 @@ Score& Score::operator=(const Score& aOther)
 
 SoundDataPointer Score::toSoundData() const
 {
+    qDebug() << Q_FUNC_INFO;
     return mPhrases_.toSoundData(mPitchCurve_);
 }
 

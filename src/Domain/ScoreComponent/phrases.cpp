@@ -26,6 +26,7 @@ void Phrases::apend(const PhrasePointer &aPhrase)
 
 SoundDataPointer Phrases::toSoundData(const PitchCurvePointer aPitchCurve) const
 {
+    qDebug() << Q_FUNC_INFO;
     SoundDataPointer soundData(new SoundData());
     for(int index = 0; index < mPhrases_.length(); ++index)
     {

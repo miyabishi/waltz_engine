@@ -1,5 +1,6 @@
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QDebug>
 #include "worldparameterscache.h"
 
 using namespace waltz::engine::SoundPlayer;
@@ -85,32 +86,44 @@ namespace
     }
     double dataToDouble(const QJsonObject& aData, const QString& aKey)
     {
+        qDebug() << Q_FUNC_INFO;
+
         QJsonValue value = aData.find(aKey).value();
         return value.toDouble();
     }
     QVector<double> createVectorFromData(const QJsonObject& aData, const QString& aKey)
     {
+        qDebug() << Q_FUNC_INFO;
+
         QVector<double> ret;
         QJsonValue value = aData.find(aKey).value();
         foreach (const QJsonValue& v,value.toArray())
         {
             ret.append(v.toDouble());
         }
+
         return ret;
     }
 
     QVector<QVector<double>> create2DVectorFromData(const QJsonObject& aData, const QString& aKey)
     {
         QVector<QVector<double>> ret;
+
         QJsonValue value = aData.find(aKey).value();
-        for(int index = 0; index < aData.size(); ++index)
+        QJsonArray ary = value.toArray();
+
+
+        for(int xIndex= 0; xIndex < ary.size(); ++xIndex)
         {
-            QJsonArray ary = value.toArray();
-            foreach (const QJsonValue& v, ary[index].toArray())
+            QJsonArray yAry = ary[xIndex].toArray();
+            QVector<double> yVector;
+            for (int yIndex=0; yIndex < yAry.size(); ++yIndex)
             {
-                ret[index].append(v.toDouble());
+                yVector.append(yAry[yIndex].toDouble());
             }
+            ret.append(yVector);
         }
+
         return ret;
     }
 

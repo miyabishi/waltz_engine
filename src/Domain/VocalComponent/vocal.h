@@ -29,6 +29,9 @@ namespace waltz
                 waltz::agent::WaltzVocalAgent* vocalAgent();
 
             private:
+                void registerAllWorldParametersCache() const;
+
+            private:
                 static Vocal*                      mInstance_;
                 waltz::agent::WaltzVocalAgent      mVocalAgent_;
                 waltz::engine::SoundPlayer::Player mPlayer_;

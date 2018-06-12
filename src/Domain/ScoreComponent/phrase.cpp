@@ -48,6 +48,8 @@ std::vector<waltz::agent::IAlias*> Phrase::aliases() const
 // TODO: リファクタ対象。長すぎる関数
 SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 {
+    qDebug() << Q_FUNC_INFO << __LINE__;
+
     WaltzVocalAgent* agent = Vocal::getInstance().vocalAgent();
     if (agent == 0 || mNotes_.length() == 0)
     {
@@ -72,8 +74,8 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                                   new QByteArray(firstData.waveformRawData(),
                                                  firstData.waveformRawDataSize())),
                                soundDataInformation));
-
     NotePointer firstNote = mNotes_.at(0);
+
     TimeRange firstDataSoundRange(firstNote->noteStartTime().toMilliSeconds()
                                                             .subtract(mPrecedingTime_),
                                  firstNote->endTime());
@@ -85,7 +87,6 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                          firstDataSoundRange,
                          MilliSeconds(firstData.lengthOfFixedRange().asMilliSeconds()),
                          WorldParametersCacheId(QString::fromStdString(firstData.phonemes())));
-
 
     // TODO
     if ( fragmentList.length() < mNotes_.length())
@@ -109,8 +110,6 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
                                   soundDataInformation));
 
         NotePointer note = mNotes_.at(index);
-        qDebug() << "alias:" << QString::fromStdString(note->alias()->value());
-        qDebug() << "note start time:" << note->noteStartTime().toMilliSeconds().value();
 
         MilliSeconds overlapTime = MilliSeconds(data.preceding().asMilliSeconds());
 
@@ -159,6 +158,7 @@ waltz::engine::SoundPlayer::SoundDataPointer Phrase::appendPhraseSoundData(
         const waltz::engine::SoundPlayer::SoundDataPointer aSoundData,
         const PitchCurvePointer aPitchCurve)
 {
+    qDebug() << Q_FUNC_INFO;
     SoundDataPointer soundData = aSoundData;
     PitchCurvePointer pitchCurve = aPitchCurve;
     SoundDataPointer appendSoundData = toSoundData(pitchCurve);

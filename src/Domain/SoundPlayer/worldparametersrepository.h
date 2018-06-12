@@ -2,6 +2,10 @@
 #define WORLDPARAMETERSREPOSITORY_H
 
 #include <QMap>
+#include <QSqlDatabase>
+#include <QDir>
+#include <QPointer>
+
 #include "worldparameters.h"
 #include "worldparameterscacheid.h"
 #include "worldparameterscache.h"
@@ -17,6 +21,8 @@ namespace waltz
             {
             public:
                 static WorldParametersRepository& getInstance();
+                bool open(const QString& aDbPath);
+
                 bool hasWorldParammeters(const WorldParametersCacheId& aWorldParametersCacheId) const;
 
                 void loadWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
@@ -24,15 +30,13 @@ namespace waltz
                 void registerWorldParameters(const WorldParametersCacheId& aWorldParametersCacheId,
                                              WorldParameters* aWorldParameters);
 
-                void saveToFile(const QString& aFilePath) const;
-                void loadFromFile(const QString& aFilePath);
-
             private:
                 static WorldParametersRepository* mInstance_;
-                QMap<QString, WorldParametersCachePointer> mWorldParametersRepository_;
+                QSqlDatabase mDatabase_;
 
             private:
                 WorldParametersRepository();
+                ~WorldParametersRepository();
             };
 
         } // namespace SoundPlayer
