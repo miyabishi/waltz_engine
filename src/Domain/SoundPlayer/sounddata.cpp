@@ -182,7 +182,6 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
                                         const MilliSeconds &aPrecedingTime,
                                         const MilliSeconds &aOverlapTime)
 {
-
     MilliSeconds precedingTime = aPrecedingTime;
     if (aPrecedingTime.isSmallerThan(aOverlapTime))
     {
@@ -197,35 +196,22 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
     shrinkSoundVectorIfLongerThan(startTimeIndex);
     extendSoundVectorIfShorterThan(startTimeIndex);
 
-    qDebug() << Q_FUNC_INFO << __LINE__;
-    qDebug() << Q_FUNC_INFO << __LINE__
-             << "append sounddata length:" << aSoundData->toVector().length();
-    qDebug() << Q_FUNC_INFO << __LINE__
-             << "startTimeIndex:" << startTimeIndex;
-    qDebug() << Q_FUNC_INFO << __LINE__
-             << "precedingArrayLength:" << precedingArrayLength;
-    qDebug() << Q_FUNC_INFO << __LINE__
-             << "overlapArrayLength:" << overlapArrayLength;
-
     for(int index = 0; index < aSoundData->toVector().length(); ++index)
     {
         int currentSoundVectorIndex = startTimeIndex - precedingArrayLength + index ;
-/*        qDebug() << Q_FUNC_INFO << __LINE__
-                 << currentSoundVectorIndex;
-        */
 
-        if (index >= overlapArrayLength)
+        if (index >= overlapArrayLength || mSoundVector_.length() <= currentSoundVectorIndex)
         {
             mSoundVector_.append(aSoundData->toVector().at(index));
             continue;
         }
 
+        if (currentSoundVectorIndex < 0) continue;
 
         double baseData = fadeOutFunction(mSoundVector_.at(currentSoundVectorIndex),
                                           0,
                                           index,
                                           overlapArrayLength);
-
         double appendData = fadeInFunction(aSoundData->toVector().at(index),
                                            0,
                                            index,
@@ -237,9 +223,9 @@ void SoundData::appendDataWithCrossfade(QSharedPointer<SoundData> aSoundData,
             continue;
         }
 
+
         mSoundVector_[currentSoundVectorIndex] = baseData + appendData;
     }
-    qDebug() << "soundVector is created";
 }
 
 QSharedPointer<SoundData> SoundData::rightSideFrom(const ScoreComponent::MilliSeconds& aStartTime) const
@@ -284,6 +270,7 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
                           const MilliSeconds& aFixedRangeLength,
                           const WorldParametersCacheId& aWorldParametersCacheId)
 {
+    qDebug() << Q_FUNC_INFO << __LINE__;
     WorldParameters worldParameters = {0};
     mSoundDataInformation_->setWorldParametersToValues(&worldParameters);
     int samplingFrequency = worldParameters.samplingFrequency;
@@ -316,6 +303,8 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
         WorldParametersRepository::getInstance().registerWorldParameters(aWorldParametersCacheId,
                                                                         &worldParameters);
     }
+    qDebug() << Q_FUNC_INFO << __LINE__;
+
     // 伸縮
     int outputLength = mSoundDataInformation_->calculateIndex(aNoteTimeRange.length());
     double stretchRate = (double)(outputLength) / inputLengh;
@@ -336,6 +325,8 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
     double f0FlexibleRangeStretchRate =
             (double)(outputF0Length - fixedRangeF0Length) /
             (worldParameters.lengthOfF0 - fixedRangeF0Length);
+
+    qDebug() << Q_FUNC_INFO << __LINE__;
 
     for(int timeIndex = 0; timeIndex < outputF0Length; ++timeIndex)
     {
