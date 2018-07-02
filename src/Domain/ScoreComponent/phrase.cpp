@@ -48,8 +48,6 @@ std::vector<waltz::agent::IAlias*> Phrase::aliases() const
 // TODO: リファクタ対象。長すぎる関数
 SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 {
-    qDebug() << Q_FUNC_INFO << __LINE__;
-
     WaltzVocalAgent* agent = Vocal::getInstance().vocalAgent();
     if (agent == 0 || mNotes_.length() == 0)
     {
@@ -131,7 +129,7 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
 
 
         // overlapTimeが前のノートの伸張部分より長い場合は調整する
-
+        /*
         if (extendTimeOfPreData.isSmallerThan(MilliSeconds(0.0)))
         {
             precedingTime = overlapTime;
@@ -139,7 +137,7 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
         else if (extendTimeOfPreData.isSmallerThan(precedingTime))
         {
             precedingTime = precedingTime.subtract(extendTimeOfPreData);
-        }
+        }*/
 
         soundData->appendDataWithCrossfade(fragmentSoundData,
                                            note->noteStartTime().toMilliSeconds().subtract(mNotes_.startTime()).add(mPrecedingTime_),

@@ -270,7 +270,6 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
                           const MilliSeconds& aFixedRangeLength,
                           const WorldParametersCacheId& aWorldParametersCacheId)
 {
-    qDebug() << Q_FUNC_INFO << __LINE__;
     WorldParameters worldParameters = {0};
     mSoundDataInformation_->setWorldParametersToValues(&worldParameters);
     int samplingFrequency = worldParameters.samplingFrequency;
@@ -326,7 +325,6 @@ void SoundData::transform(const PitchCurvePointer aPitchCurve,
             (double)(outputF0Length - fixedRangeF0Length) /
             (worldParameters.lengthOfF0 - fixedRangeF0Length);
 
-    qDebug() << Q_FUNC_INFO << __LINE__;
 
     for(int timeIndex = 0; timeIndex < outputF0Length; ++timeIndex)
     {
