@@ -1,7 +1,7 @@
 #ifndef INFORMATIONDIALOG_H
 #define INFORMATIONDIALOG_H
 
-#include <QDialog>
+#include <QMessageBox>
 
 class QSystemTrayIcon;
 class QAction;
@@ -12,7 +12,7 @@ namespace waltz
     {
         namespace dialog
         {
-            class InformationDialog : public QDialog
+            class InformationDialog : public QMessageBox
             {
                 Q_OBJECT
 
