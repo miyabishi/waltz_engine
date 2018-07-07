@@ -4,6 +4,7 @@
 #include <QMenu>
 #include "informationdialog.h"
 #include "src/Notifier/tasktraynotifier.h"
+#include "version.h"
 
 using namespace waltz::engine::dialog;
 using namespace waltz::engine::Notifier;
@@ -11,7 +12,7 @@ using namespace waltz::engine::Notifier;
 namespace
 {
     const QString INFORMATION_TEXT = "<p><b><big>Waltz Engine<big></b><br />\
-<b>Version:</b> 0.0.1 <br />\
+<b>Version:</b>%1<br />\
 <b>GitHub:</b> <a href=\"https://github.com/miyabishi/waltz_engine\">\
 https://github.com/miyabishi/waltz_engine</a></p>";
 }
@@ -24,7 +25,7 @@ InformationDialog::InformationDialog(QWidget *parent)
     , mTrayIconMenu_(*new QMenu(this))
 {
     initializeTrayIcon();
-    setText(INFORMATION_TEXT);
+    setText(INFORMATION_TEXT.arg(Version::value()));
 }
 
 void InformationDialog::initializeTrayIcon()
