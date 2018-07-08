@@ -148,7 +148,7 @@ SoundDataPointer Phrase::toSoundData(const PitchCurvePointer aPitchCurve)
         extendTimeOfPreData = soundLengthOfPreData.subtract(fixedRangeTime);
     }
 
-    aPitchCurve->outputForDebug("pitchCurve_debug.txt");
+//    aPitchCurve->outputForDebug("pitchCurve_debug.txt");
     return soundData;
 }
 
@@ -156,7 +156,6 @@ waltz::engine::SoundPlayer::SoundDataPointer Phrase::appendPhraseSoundData(
         const waltz::engine::SoundPlayer::SoundDataPointer aSoundData,
         const PitchCurvePointer aPitchCurve)
 {
-    qDebug() << Q_FUNC_INFO;
     SoundDataPointer soundData = aSoundData;
     PitchCurvePointer pitchCurve = aPitchCurve;
     SoundDataPointer appendSoundData = toSoundData(pitchCurve);

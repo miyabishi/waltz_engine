@@ -19,6 +19,5 @@ StopCommand::StopCommand()
 void StopCommand::exec(
         const waltz::common::Commands::Parameters& /*aParameters*/)
 {
-    qDebug() << "Stop";
     waltz::engine::VocalComponent::Vocal::getInstance().stopSinging();
 }

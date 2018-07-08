@@ -102,9 +102,4 @@ void WorldParametersRepository::registerWorldParameters(const WorldParametersCac
 
     QJsonDocument doc(cache->toJsonObject());
     query.bindValue(":json", qCompress(doc.toBinaryData()));
-
-    if(! query.exec())
-    {
-        qDebug() << "failed to insert.";
-    }
 }

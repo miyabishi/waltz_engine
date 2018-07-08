@@ -86,15 +86,11 @@ namespace
     }
     double dataToDouble(const QJsonObject& aData, const QString& aKey)
     {
-        qDebug() << Q_FUNC_INFO;
-
         QJsonValue value = aData.find(aKey).value();
         return value.toDouble();
     }
     QVector<double> createVectorFromData(const QJsonObject& aData, const QString& aKey)
     {
-        qDebug() << Q_FUNC_INFO;
-
         QVector<double> ret;
         QJsonValue value = aData.find(aKey).value();
         foreach (const QJsonValue& v,value.toArray())

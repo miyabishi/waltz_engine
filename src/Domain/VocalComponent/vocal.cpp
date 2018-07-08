@@ -54,10 +54,6 @@ void Vocal::loadVoiceLibrary(const QString &aPath)
     {
         qDebug() << "failed to open." << (aPath + ".db");
     }
-    else
-    {
-        qDebug() << "success to open";
-    }
 
 //    registerAllWorldParametersCache();
 

@@ -30,7 +30,6 @@ SoundDataPointer Phrases::toSoundData(const PitchCurvePointer aPitchCurve) const
     SoundDataPointer soundData(new SoundData());
     for(int index = 0; index < mPhrases_.length(); ++index)
     {
-        qDebug() << "phrase index:" << index;
         soundData = mPhrases_.at(index)->appendPhraseSoundData(soundData, aPitchCurve);
     }
 

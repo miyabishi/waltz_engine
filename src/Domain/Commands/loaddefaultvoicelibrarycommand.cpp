@@ -22,7 +22,6 @@ void LoadDefaultVoiceLibraryCommand::exec(const Parameters& /*aParameters*/)
 {
     QFileInfo info;
     QString path = Settings::EngineSettings::getInstance().defaultVoiceLibraryPath();
-    qDebug() << "momo path" << path;
     if (! info.exists(path)) return;
 
     Vocal::getInstance().loadVoiceLibrary(path);
