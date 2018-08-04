@@ -22,8 +22,11 @@ void MessageFile::execute() const
     }
     QFile file(mFileInfo_->absoluteFilePath());
     file.open(QFile::ReadOnly);
-    Communicator::ReceivedData receivedData(file.readAll());
+    while(! file.atEnd())
+    {
+        Communicator::ReceivedData receivedData(file.readLine());
+        receivedData.executeCommand();
+    }
     file.close();
-    receivedData.executeCommand();
 }
 
