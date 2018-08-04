@@ -85,7 +85,8 @@ SOURCES += main.cpp \
     src/Domain/VocalComponent/correspondencealiaslist.cpp \
     src/Domain/Commands/exitcommand.cpp \
     src/Domain/Commands/loaddefaultvoicelibrarycommand.cpp \
-    src/Dialog/InformationDialog/version.cpp
+    src/Dialog/InformationDialog/version.cpp \
+    src/FileIO/messagefile.cpp
 
 HEADERS  += \
     src/Dialog/InformationDialog/informationdialog.h \
@@ -153,10 +154,14 @@ HEADERS  += \
     src/Domain/VocalComponent/correspondencealiaslist.h \
     src/Domain/Commands/exitcommand.h \
     src/Domain/Commands/loaddefaultvoicelibrarycommand.h \
-    src/Dialog/InformationDialog/version.h
+    src/Dialog/InformationDialog/version.h \
+    src/FileIO/messagefile.h
 
 RESOURCES += \
     resource/waltzengine.qrc
+
+RC_ICONS = waltz.ico
+
 
 DISTFILES +=
 
