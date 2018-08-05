@@ -3,6 +3,7 @@
 #include <QJsonDocument>
 #include <QFile>
 #include "worldparametersrepository.h"
+#include "src/Notifier/tasktraynotifier.h"
 #include <QDir>
 #include <QFileInfo>
 #include <QDebug>
@@ -102,4 +103,5 @@ void WorldParametersRepository::registerWorldParameters(const WorldParametersCac
 
     QJsonDocument doc(cache->toJsonObject());
     query.bindValue(":json", qCompress(doc.toBinaryData()));
+    query.exec();
 }

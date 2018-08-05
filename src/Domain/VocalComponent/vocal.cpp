@@ -6,6 +6,7 @@
 #include <fragmentlist.h>
 #include <samephonemefragmentsets.h>
 
+#include "src/Notifier/tasktraynotifier.h"
 #include "src/Domain/ScoreComponent/note.h"
 #include "src/Communicator/communicationserver.h"
 #include "src/Domain/SoundPlayer/player.h"
@@ -52,10 +53,10 @@ void Vocal::loadVoiceLibrary(const QString &aPath)
 
     if (! WorldParametersRepository::getInstance().open(aPath + ".db"))
     {
-        qDebug() << "failed to open." << (aPath + ".db");
+        engine::Notifier::TaskTrayNotifier::getInstance().notifyError(
+                    "failed to open." + aPath + ".db");
     }
 
-//    registerAllWorldParametersCache();
 
     Parameters parameters;
     parameters.append(Parameter("ImageFilePath",
